@@ -25,7 +25,6 @@ const modalSlice = createSlice({
       state.isCheckoutModalOpen = false;
     },
     openLoginModal(state) {
-      console.log("-----------------",state.isLoginModalOpen);
       state.isLoginModalOpen = true;
     },
     closeLoginModal(state) {

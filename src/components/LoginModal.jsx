@@ -9,9 +9,7 @@ const LoginModal = () => {
 
   const handleOpenRegister = () => {
     dispatch(modalActions.closeLoginModal());
-    console.log(111);
     dispatch(modalActions.openRegisterModal());
-    console.log(222);
   };
 
   return (

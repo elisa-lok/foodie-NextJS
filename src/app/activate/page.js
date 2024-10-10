@@ -4,6 +4,9 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { modalActions } from "@/app/store/modal";
+import Cart from "@/components/Cart";
+import Checkout from "@/components/Checkout";
+import LoginModal from "@/components/LoginModal";
 import axios from "axios";
 
 export default function activatePage() {
@@ -57,14 +60,15 @@ export default function activatePage() {
           Go to Home
         </button>
           <button className="btn" onClick={() => {
-             alert('111');
-            //window.close();
-            //dispatch(modalActions.openLoginModal());
+            dispatch(modalActions.openLoginModal());
         }}>
           Go to Login
         </button>
       </div>
       )}
+      <LoginModal />
+      <Cart />
+      <Checkout />
   </div>
   )
 }
