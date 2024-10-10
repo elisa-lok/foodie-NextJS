@@ -1,10 +1,22 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
+import Button from "@/components/UI/Button.jsx";
+import { useDispatch, useSelector } from "react-redux";
+import { modalActions } from "@/app/store/modal";
 
 const Header = () => {
+  const dispatch = useDispatch();
+  const cartQuantity = useSelector((state) => state.cart.totalQuantity);
+
+  const handleLoginClick = () => {
+    dispatch(modalActions.openLoginModal());
+  };
+
   return (
-    <header className="flex justify-between items-center p-12">
-      <div className="flex items-center gap-4">
+    <header id="main-header">
+      <div id="title">
         <Link href="/">
           <Image
             className="w-16 h-16 object-contain rounded-lg border-2 border-spacing-1 border-red-200 "
@@ -14,10 +26,18 @@ const Header = () => {
             height={100}
           />
         </Link>
-        <h1>Food Order</h1>
+        <h1>Level One Pizza</h1>
       </div>
-      <nav>
-        <button>Cart</button>
+      <nav style={{ display: "flex", alignItems: "center", gap: "20px" }}>
+        <div onClick={handleLoginClick} style={{ cursor: "pointer" }}>
+          <Image src="/assets/login.png" alt="Login" width={24} height={24} />
+        </div>
+        <Button
+          textButton
+          onClick={() => dispatch(modalActions.openCartModal())}
+        >
+          Cart({cartQuantity})
+        </Button>
       </nav>
     </header>
   );
