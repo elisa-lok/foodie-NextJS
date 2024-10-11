@@ -45,7 +45,6 @@ export default function activatePage() {
         <h1>Account Activated!</h1>
         <p>Your account has been successfully activated. You can now log in.</p>
           <button className="btn" onClick={() => {
-            window.close();
             dispatch(modalActions.openLoginModal());
         }}>
           Go to Login
@@ -58,11 +57,6 @@ export default function activatePage() {
         <p>There was an issue activating your account. Please try again or contact support.</p>
         <button onClick={() => router.push("/")} className="btn">
           Go to Home
-        </button>
-          <button className="btn" onClick={() => {
-            dispatch(modalActions.openLoginModal());
-        }}>
-          Go to Login
         </button>
       </div>
       )}

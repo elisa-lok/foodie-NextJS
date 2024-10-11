@@ -358,9 +358,15 @@ h1 {
 }
 
 .register-button {
-  color: #312c1d;
+  color: #8b0000;
   border: none;
   font-family: 'Lato', sans-serif;
+}
+
+.register-button:hover, 
+.register-button:active {
+  color: #f00;
+  background-color: transparent;
 }
 
 .activation-page {
