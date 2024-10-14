@@ -2,8 +2,8 @@ import { modalActions } from "@/app/store/modal";
 import Modal from "@/components/UI/Modal";
 import Button from "@/components/UI/Button";
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
-const { useDispatch, useSelector } = require("react-redux");
 
 const RegisterModal = () => {
   const dispatch = useDispatch();
@@ -19,6 +19,7 @@ const RegisterModal = () => {
 
   const handleSubmitForm = async (e) => {
     e.preventDefault();
+    setError("");
 
     if (!email || !password || !confirmPassword) {
       setError("All fields are required");
@@ -30,26 +31,23 @@ const RegisterModal = () => {
       return;
     }
 
-    try {
-      const response = await axios.post("/api/register", {
-        email,
-        password,
-      });
+    const response = await axios.post("/api/register", {
+      email,
+      password,
+    });
 
-      if (response.data.status === 200) {
-        console.log("Registration successful:", response.data);
-        setSuccessMessage(
-          "Registration successful! Please check your email to activate your account."
-        );
+    if (response.data.status === 200) {
+      console.log("Registration successful:", response.data);
+      setSuccessMessage(
+        "Registration successful! Please check your email to activate your account."
+      );
 
-        setTimeout(() => {
-          dispatch(modalActions.closeRegisterModal());
-          setSuccessMessage("");
-        }, 3000);
-      }
-    } catch (error) {
-      setError("Failed to register user");
-      console.error("Registration error:", error);
+      setTimeout(() => {
+        dispatch(modalActions.closeRegisterModal());
+        setSuccessMessage("");
+      }, 3000);
+    } else {
+      setError(response.data.error || "Failed to register user.");
     }
   };
 
@@ -62,7 +60,9 @@ const RegisterModal = () => {
       <h2 className="text-xl font-bold mb-4 text-center">User Register</h2>
       {error && <p className="text-red-500 text-center">{error}</p>}
       {successMessage && (
-        <p className="text-black text-center bg-gray-200 p-4 rounded-md mb-4">{successMessage}</p>
+        <p className="text-black text-center bg-gray-200 p-4 rounded-md mb-4">
+          {successMessage}
+        </p>
       )}
       {!successMessage && (
         <form className="login-form" onSubmit={handleSubmitForm}>

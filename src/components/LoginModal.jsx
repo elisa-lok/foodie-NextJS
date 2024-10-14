@@ -1,15 +1,37 @@
 import { modalActions } from "@/app/store/modal";
 import Modal from "@/components/UI/Modal";
 import Button from "@/components/UI/Button";
-const { useDispatch, useSelector } = require("react-redux");
+import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
+import { useState } from "react";
 
 const LoginModal = () => {
   const dispatch = useDispatch();
   const isLoginModalOpen = useSelector((state) => state.modal.isLoginModalOpen);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
   const handleOpenRegister = () => {
     dispatch(modalActions.closeLoginModal());
     dispatch(modalActions.openRegisterModal());
+  };
+
+  const handleLoginForm = async (e) => {
+    e.preventDefault();
+    setError("");
+
+    if (!email || !password) {
+      setError("All fields are required");
+      return;
+    }
+
+    const response = await axios.post("/api/login", { email, password });
+    if (response.data.status === 200) {
+      console.log("Login successful:", response.data);
+    } else {
+      setError(response.data.error || "Login failed.");
+    }
   };
 
   return (
@@ -19,17 +41,27 @@ const LoginModal = () => {
       onClose={() => dispatch(modalActions.closeLoginModal())}
     >
       <h2 className="text-xl font-bold mb-4 text-center">User Login</h2>
-      <form className="login-form">
+      {error && <p className="text-red-500 text-center">{error}</p>}
+      <form className="login-form" onSubmit={handleLoginForm}>
         <div className="input-group">
           <label htmlFor="email">Email:</label>
-          <input type="email" name="email" className="login-input" required />
+          <input
+            type="email"
+            name="email"
+            value={email}
+            className="login-input"
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
         </div>
         <div className="input-group">
           <label htmlFor="password">Password:</label>
           <input
             type="password"
             name="password"
+            value={password}
             className="login-input"
+            onChange={(e) => setPassword(e.target.value)}
             required
           />
         </div>
