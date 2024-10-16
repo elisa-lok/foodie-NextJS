@@ -1,9 +1,8 @@
-
-
 import dbConnect from '@/utils/db';
 import User from '@/app/models/User';
 import { NextResponse } from 'next/server';
 import bcrypt from 'bcrypt';
+import { createToken } from '@/utils/token';
 
 export async function POST(req) {
   try {
@@ -29,12 +28,12 @@ export async function POST(req) {
       )
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-    if(hashedPassword !== user.password) {
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
       return NextResponse.json(
         {
           status: 401,
-          error: "Invalid credentials."
+          error: "Invalid credentials.",
         }
       )
     }
@@ -42,9 +41,20 @@ export async function POST(req) {
     user.lastLogin = new Date();
     await user.save();
 
+    const token = createToken(user._id);
+    if(!token) {
+      return NextResponse.json(
+        {
+          status: 500,
+          error: "Failed to generate token.",
+        }
+      )
+    } 
+    
     return NextResponse.json({
       status: 200,
-      message: 'Account Logins successfully.'
+      message: 'Account Logins successfully.',
+      token: token,
     })
 
   } catch (error) {

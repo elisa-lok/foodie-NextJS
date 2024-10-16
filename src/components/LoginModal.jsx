@@ -4,10 +4,12 @@ import Button from "@/components/UI/Button";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 const LoginModal = () => {
   const dispatch = useDispatch();
   const isLoginModalOpen = useSelector((state) => state.modal.isLoginModalOpen);
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -29,6 +31,10 @@ const LoginModal = () => {
     const response = await axios.post("/api/login", { email, password });
     if (response.data.status === 200) {
       console.log("Login successful:", response.data);
+      const token = response.data.token;
+      localStorage.setItem("token", token);
+      dispatch(modalActions.closeLoginModal());
+      router.push("/");
     } else {
       setError(response.data.error || "Login failed.");
     }
