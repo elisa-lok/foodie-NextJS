@@ -402,6 +402,36 @@ h1 {
   background-color: #45a049;
 }
 
+.account-page {
+  padding: 3rem 10%;
+}
+
+.account-sidebar {
+  background: linear-gradient(to bottom, #3a3427, #2c2306);
+}
+
+.account-content {
+  background: linear-gradient(to top, #3a3427, #2c2306);
+  color: #d9e2f1;
+  padding: 2rem;
+  border-radius: 8px;
+}
+
+.account-sidebar ul li {
+  transition: background-color 0.2s ease;
+}
+
+.account-sidebar ul li:hover,
+.account-sidebar ul li.active {
+  background-color: #4a4235; 
+  color: #ffc404;
+}
+
+.account-sidebar ul li.bg-yellow-400:hover {
+  background-color: #4a4235; 
+  color: #ffc404; 
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;

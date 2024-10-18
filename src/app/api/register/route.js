@@ -37,6 +37,8 @@ export async function POST(req) {
       status: 'inactive',
       createTime: new Date(),
       lastLogin: null,
+      nickname: null,
+      avatar: null,
     })
 
     await newUser.save();

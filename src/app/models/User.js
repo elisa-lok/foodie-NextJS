@@ -23,6 +23,14 @@ const UserSchema = new mongoose.Schema({
     type: Date,
     default: null, 
   },
+  nickname: {
+    type: String,
+    default: null,
+  },
+  avatar: {
+    type: String,
+    default: null,
+  }
 });
 
 export default mongoose.models.User || mongoose.model('User', UserSchema);

@@ -31,8 +31,12 @@ const LoginModal = () => {
     const response = await axios.post("/api/login", { email, password });
     if (response.data.status === 200) {
       console.log("Login successful:", response.data);
+
       const token = response.data.token;
+      const user = response.data.user;
       localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(user));
+
       dispatch(modalActions.closeLoginModal());
       router.push("/");
     } else {

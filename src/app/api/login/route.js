@@ -49,12 +49,23 @@ export async function POST(req) {
           error: "Failed to generate token.",
         }
       )
-    } 
+    }
+    
+    const userInfo = {
+      id: user._id,
+      email: user.email,
+      status: user.status,
+      createTime: user.createTime,
+      lastLogin: user.lastLogin,
+      nickname: user.nickname,
+      avatar: user.avatar
+    };
     
     return NextResponse.json({
       status: 200,
       message: 'Account Logins successfully.',
       token: token,
+      user: userInfo,
     })
 
   } catch (error) {

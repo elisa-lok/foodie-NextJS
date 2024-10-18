@@ -10,14 +10,14 @@ import RegisterModal from "@/components/RegisterModal";
 import { useDispatch, useSelector } from "react-redux";
 import { modalActions } from "@/app/store/modal";
 import { useRouter } from "next/navigation";
-import axios from "axios";
+import { checkUserLogin } from "@/utils/auth";
 
 const Header = () => {
   const dispatch = useDispatch();
   const cartQuantity = useSelector((state) => state.cart.totalQuantity);
   const router = useRouter();
 
-  const checkUserLogin = async () => {
+  const handleClickAccount = async () => {
     try {
       const token = localStorage.getItem("token");
       if (!token) {
@@ -26,11 +26,7 @@ const Header = () => {
         return;
       }
 
-      const response = await axios.get("/api/auth", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await checkUserLogin(token);
 
       if (response.data.status === 200) {
         console.log("User is logged in:", response.data.user);
@@ -69,7 +65,7 @@ const Header = () => {
         {/* <div onClick={handleLoginClick} style={{ cursor: "pointer" }}>
           <Image src="/assets/login.png" alt="Login" width={24} height={24} />
         </div> */}
-        <Button textButton onClick={checkUserLogin}>
+        <Button textButton onClick={handleClickAccount}>
           Account
         </Button>
         <Button
