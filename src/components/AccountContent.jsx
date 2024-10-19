@@ -22,7 +22,7 @@ const AccountContent = ({ selectedTab, user }) => {
       case "reviews":
         return <p>Your reviews are listed here.</p>;
       case "logout":
-        return <p>You have logged out.</p>;
+        return <p>You can click logout button to log out the account!</p>;
       default:
         return <p>Select a tab to view content.</p>;
     }

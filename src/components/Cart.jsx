@@ -64,7 +64,12 @@ export default function Cart() {
           <p style={{ marginBottom: "50px", marginTop: "50px" }}>
             Your cart is empty, you can click the button below to go shopping!
           </p>
-          <Button onClick={goShopping}>Go shopping</Button>
+          <p className="modal-actions">
+            <Button onClick={() => dispatch(modalActions.closeCartModal())}>
+              Close
+            </Button>
+            <Button onClick={goShopping}>Go shopping</Button>
+          </p>
         </div>
       )}
     </Modal>
