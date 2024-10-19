@@ -1,5 +1,6 @@
 import React from "react";
 import AccountInfo from "./AccountInfo";
+import AccountPassword from "./AccountPassword";
 
 const AccountContent = ({ selectedTab, user }) => {
   const renderContent = () => {
@@ -11,7 +12,7 @@ const AccountContent = ({ selectedTab, user }) => {
       case "info":
         return <AccountInfo user={user} />;
       case "password":
-        return <p>Change your password here.</p>;
+        return <AccountPassword userId={user.id} />;
       case "orders":
         return <p>Here are your orders.</p>;
       case "favorites":

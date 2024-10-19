@@ -22,6 +22,7 @@ const Header = () => {
       const token = localStorage.getItem("token");
       if (!token) {
         console.log("No token found, user is not logged in.");
+        if (localStorage.getItem("user")) localStorage.removeItem("user");
         dispatch(modalActions.openLoginModal());
         return;
       }
@@ -33,6 +34,8 @@ const Header = () => {
         router.push("/account");
       } else {
         console.log("User is not logged in:", response.data.message);
+        if (localStorage.getItem("token")) localStorage.removeItem("token");
+        if (localStorage.getItem("user")) localStorage.removeItem("user");
         dispatch(modalActions.openLoginModal());
       }
     } catch (error) {

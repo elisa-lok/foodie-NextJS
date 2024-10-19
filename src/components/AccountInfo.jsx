@@ -7,6 +7,8 @@ const AccountInfo = ({ user }) => {
     nickname: user?.nickname || "",
     avatar: user?.avatar || "",
   });
+  const [errorMsg, setErrorMsg] = useState(null);
+  const [successMsg, setSuccessMsg] = useState(null);
 
   useEffect(() => {
     if (user) {
@@ -36,6 +38,14 @@ const AccountInfo = ({ user }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrorMsg(null);
+    setSuccessMsg(null);
+
+    if (!updatedUser.email || !updatedUser.nickname || !updatedUser.avatar) {
+      setErrorMsg("Please fill in all required fields.");
+      return;
+    }
+
     try {
       const response = await axios.put("/api/account", {
         email: updatedUser.email,
@@ -43,14 +53,21 @@ const AccountInfo = ({ user }) => {
         avatar: updatedUser.avatar,
       });
       if (response.data.status === 200) {
-        setUpdatedUser({
+        const updatedUserInfo = {
+          ...user,
           nickname: response.data.nickname,
           avatar: response.data.avatar,
-        });
+        };
+
+        localStorage.setItem("user", JSON.stringify(updatedUserInfo));
+        console.log("User updated successfully:", response.data);
+        setSuccessMsg("Account information updated successfully.");
+      } else {
+        setErrorMsg(response.data.error);
       }
-      console.log("User updated successfully:", response.data);
     } catch (error) {
       console.error("Error updating user:", error);
+      setErrorMsg("Failed to update account information.");
     }
   };
 
@@ -60,6 +77,8 @@ const AccountInfo = ({ user }) => {
 
   return (
     <form className="account-info" onSubmit={handleSubmit}>
+      {errorMsg && <p className="error-message">{errorMsg}</p>}
+      {successMsg && <p className="success-message">{successMsg}</p>}
       <div className="form-group">
         <label htmlFor="email">Email:</label>
         <input
@@ -78,6 +97,7 @@ const AccountInfo = ({ user }) => {
           value={updatedUser.nickname}
           onChange={handleInputChange}
           className="form-input"
+          required
         />
       </div>
       <div className="form-group">

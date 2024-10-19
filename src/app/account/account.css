@@ -25,6 +25,12 @@
   color: black;
 }
 
+.form-input[type="password"] {
+  padding-right: 2rem;
+  box-sizing: border-box;
+  color: black;
+}
+
 .form-input {
   width: 100%;
   padding: 8px;
@@ -59,4 +65,29 @@
 
 .btn-save:hover {
   background-color: #0056b3;
+}
+
+.password-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-toggle-icon {
+  position: absolute;
+  right: 10px;
+  cursor: pointer;
+  user-select: none;
+  font-size: 1.2rem; 
+  color: #888; 
+}
+
+.error-message {
+  color: red;
+  margin-bottom: 10px;
+}
+
+.success-message {
+  color: green;
+  margin-bottom: 10px;
 }

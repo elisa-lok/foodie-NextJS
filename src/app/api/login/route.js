@@ -18,7 +18,7 @@ export async function POST(req) {
 
     await dbConnect();
 
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email, status: "active"});
     if (!user) {
       return NextResponse.json(
         {

@@ -17,9 +17,10 @@ export async function GET(req) {
 
     await dbConnect();
 
-    const user = await User.findById(decoded.userId);
+    //const user = await User.findById(decoded.userId);
+    const user = await User.findOne({ _id: decoded.userId, status: "active" });
     if (!user) {
-      return NextResponse.json({ status: 404, message: "User not found" });
+      return NextResponse.json({ status: 404, message: "User not found or not active" });
     }
 
     return NextResponse.json({ status: 200, user: { id: user._id, email: user.email } });

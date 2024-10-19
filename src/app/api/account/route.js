@@ -18,10 +18,20 @@ export async function PUT(req) {
       });
     }
 
-    user.nickname = nickname || user.nickname || "";
-    user.avatar = avatar || user.avatar || "";
+    const isNicknameUnchanged = nickname === user.nickname;
+    const isAvatarUnchanged =
+      avatar.startsWith('/uploads') && avatar === user.avatar;
 
-    if (avatar) {
+    if (isNicknameUnchanged && isAvatarUnchanged) {
+      return NextResponse.json({
+        status: 400,
+        error: "No changes detected in the fields.",
+      });
+    }
+
+    user.nickname = nickname || user.nickname || "";
+
+    if (avatar && avatar.startsWith('data:image/')) {
       const base64Data = avatar.replace(/^data:image\/\w+;base64,/, '');
       const buffer = Buffer.from(base64Data, 'base64');
 
