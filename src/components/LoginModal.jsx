@@ -76,7 +76,10 @@ const LoginModal = () => {
           />
         </div>
         <div className="login-actions">
-          <Button onClick={() => dispatch(modalActions.closeLoginModal())}>
+          <Button
+            type="button"
+            onClick={() => dispatch(modalActions.closeLoginModal())}
+          >
             Cancel
           </Button>
           <button type="submit" className="submit-button">

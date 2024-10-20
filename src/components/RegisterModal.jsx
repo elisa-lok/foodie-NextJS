@@ -53,7 +53,7 @@ const RegisterModal = () => {
 
   return (
     <Modal
-      className="login-modal"
+      className="register"
       open={isRegisterModalOpen}
       onClose={() => dispatch(modalActions.closeRegisterModal())}
     >
@@ -100,7 +100,10 @@ const RegisterModal = () => {
             />
           </div>
           <div className="login-actions">
-            <Button onClick={() => dispatch(modalActions.closeRegisterModal())}>
+            <Button
+              type="button"
+              onClick={() => dispatch(modalActions.closeRegisterModal())}
+            >
               Cancel
             </Button>
             <button type="submit" className="submit-button">

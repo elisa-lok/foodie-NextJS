@@ -18,6 +18,7 @@ export default function Checkout() {
 
   return (
     <Modal
+      className="checkout"
       open={isCheckoutModalOpen}
       onClose={() => dispatch(modalActions.closeCheckoutModal())}
     >
