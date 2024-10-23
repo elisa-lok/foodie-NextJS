@@ -7,7 +7,6 @@ import DeliveryPickupModal from "@/components/DeliveryPickupModal";
 
 const Meals = () => {
   const [meals, setMeals] = useState([]);
-  const [modalOpen, setModalOpen] = useState(true);
 
   useEffect(() => {
     const fetchMeals = async () => {
@@ -21,10 +20,7 @@ const Meals = () => {
 
   return (
     <>
-      <DeliveryPickupModal
-        open={modalOpen}
-        onClose={() => setModalOpen(false)}
-      />
+      <DeliveryPickupModal />
       <ul id="meals">
         {meals.map((meal) => (
           <MealItem key={meal.id} meal={meal} />

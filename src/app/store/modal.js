@@ -35,7 +35,7 @@ const modalSlice = createSlice({
     },
     closeRegisterModal(state) {
       state.isRegisterModalOpen = false;
-    }
+    },
   }
 })
 

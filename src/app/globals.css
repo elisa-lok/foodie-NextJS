@@ -432,6 +432,10 @@ h1 {
   color: #ffc404; 
 }
 
+.pickup {
+  width: 30% !important;
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;

@@ -4,9 +4,6 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { modalActions } from "@/app/store/modal";
-import Cart from "@/components/Cart";
-import Checkout from "@/components/Checkout";
-import LoginModal from "@/components/LoginModal";
 import axios from "axios";
 
 export default function activatePage() {
@@ -60,9 +57,6 @@ export default function activatePage() {
         </button>
       </div>
       )}
-      <LoginModal />
-      <Cart />
-      <Checkout />
   </div>
   )
 }
