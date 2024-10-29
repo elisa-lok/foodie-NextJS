@@ -439,6 +439,12 @@ h1 {
   overflow-y: auto;
 }
 
+.no-scroll {
+  overflow: hidden;
+  height: 100vh; 
+}
+
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;

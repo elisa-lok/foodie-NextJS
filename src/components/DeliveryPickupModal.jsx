@@ -177,6 +177,18 @@ const DeliveryPickupModal = () => {
     }
   };
 
+  useEffect(() => {
+    if (isDeliveryPickupModalOpen) {
+      document.body.classList.add("no-scroll");
+    } else {
+      document.body.classList.remove("no-scroll");
+    }
+
+    return () => {
+      document.body.classList.remove("no-scroll");
+    };
+  }, [isDeliveryPickupModalOpen]);
+
   return (
     <Modal
       className="pickup"
