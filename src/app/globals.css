@@ -434,6 +434,9 @@ h1 {
 
 .pickup {
   width: 30% !important;
+  min-height: 300px;
+  max-height: 500px;
+  overflow-y: auto;
 }
 
 @layer utilities {
