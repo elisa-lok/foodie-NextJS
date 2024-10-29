@@ -1,6 +1,5 @@
 "use client";
 
-import ReactDOM from "react-dom";
 import React, { useState, memo, useEffect, useRef } from "react";
 import Modal from "@/components/UI/Modal";
 import Button from "@/components/UI/Button";
