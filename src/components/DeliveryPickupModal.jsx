@@ -1,5 +1,6 @@
 "use client";
 
+import ReactDOM from "react-dom";
 import React, { useState, memo, useEffect, useRef } from "react";
 import Modal from "@/components/UI/Modal";
 import Button from "@/components/UI/Button";
@@ -8,7 +9,6 @@ const DeliveryPickupModal = () => {
   const [isDeliveryPickupModalOpen, setIsDeliveryPickupModalOpen] =
     useState(true);
   const [selectedOption, setSelectedOption] = useState("Delivery");
-  const [address, setAddress] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [inputValue, setInputValue] = useState("");
   const autocompleteRef = useRef(null);
@@ -76,7 +76,6 @@ const DeliveryPickupModal = () => {
       autocompleteRef.current.addListener("place_changed", () => {
         const place = autocompleteRef.current.getPlace();
         if (place && place.formatted_address) {
-          setAddress(place.formatted_address);
           setInputValue(place.formatted_address);
           setSuggestions([]);
         }
@@ -131,9 +130,47 @@ const DeliveryPickupModal = () => {
   };
 
   const handleSelectAddress = (selectedAddress) => {
-    setAddress(selectedAddress);
     setInputValue(selectedAddress);
     setSuggestions([]);
+  };
+
+  const handleCurrentLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          const geocoder = new window.google.maps.Geocoder();
+
+          geocoder.geocode(
+            { location: { lat: latitude, lng: longitude } },
+            (results, status) => {
+              if (status === "OK" && results[0]) {
+                setInputValue(results[0].formatted_address);
+                setSuggestions([]);
+              } else {
+                console.error("Geocoder failed due to: " + status);
+              }
+            }
+          );
+        },
+        (error) => {
+          if (error.code === error.PERMISSION_DENIED) {
+            alert(
+              "Location access is required to use this feature. Please allow location access or manually enter your address."
+            );
+          } else {
+            console.error("Error getting location:", error);
+            alert(
+              "Unable to retrieve your location. Please try again or enter your address manually."
+            );
+          }
+        }
+      );
+    } else {
+      alert(
+        "Geolocation is not supported by this browser. Please enter your address manually."
+      );
+    }
   };
 
   return (
@@ -168,8 +205,8 @@ const DeliveryPickupModal = () => {
         <Button
           onClick={() => setSelectedOption("Delivery")}
           style={{
-            backgroundColor: selectedOption === "Delivery" ? "#007BFF" : "#FFF",
-            color: selectedOption === "Delivery" ? "#FFF" : "#000",
+            backgroundColor: selectedOption === "Delivery" ? "#ffc404" : "#FFF",
+            color: "#000",
             marginRight: "10px",
           }}
         >
@@ -178,8 +215,8 @@ const DeliveryPickupModal = () => {
         <Button
           onClick={() => setSelectedOption("Pickup")}
           style={{
-            backgroundColor: selectedOption === "Pickup" ? "#007BFF" : "#FFF",
-            color: selectedOption === "Pickup" ? "#FFF" : "#000",
+            backgroundColor: selectedOption === "Pickup" ? "#ffc404" : "#FFF",
+            color: "#000",
             marginBottom: "10px",
           }}
         >
@@ -253,18 +290,9 @@ const DeliveryPickupModal = () => {
         </div>
       </div>
 
-      {address && (
-        <div
-          style={{
-            marginTop: "20px",
-            padding: "10px",
-            backgroundColor: "#f8f9fa",
-            borderRadius: "4px",
-          }}
-        >
-          <strong>Selected Address:</strong> {address}
-        </div>
-      )}
+      <Button onClick={handleCurrentLocation} style={{ marginTop: "20px" }}>
+        Use My Current Location
+      </Button>
     </Modal>
   );
 };
