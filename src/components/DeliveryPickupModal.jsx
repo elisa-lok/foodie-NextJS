@@ -131,6 +131,7 @@ const DeliveryPickupModal = () => {
   const handleSelectAddress = (selectedAddress) => {
     setInputValue(selectedAddress);
     setSuggestions([]);
+    localStorage.setItem("selectedAddress", selectedAddress);
   };
 
   const handleCurrentLocation = () => {
@@ -145,6 +146,10 @@ const DeliveryPickupModal = () => {
             (results, status) => {
               if (status === "OK" && results[0]) {
                 setInputValue(results[0].formatted_address);
+                localStorage.setItem(
+                  "selectedAddress",
+                  results[0].formatted_address
+                );
                 setSuggestions([]);
               } else {
                 console.error("Geocoder failed due to: " + status);
