@@ -246,6 +246,27 @@ const DeliveryPickupModal = () => {
               borderRadius: "4px",
             }}
           />
+          {inputValue && ( 
+            <button
+              onClick={() => {
+                setInputValue("");
+                setSuggestions([]);
+              }}
+              style={{
+                position: "absolute",
+                right: "10px",
+                top: "50%",
+                transform: "translateY(-50%)",
+                border: "none",
+                background: "none",
+                cursor: "pointer",
+                color: "#000",
+                fontSize: "18px",
+              }}
+            >
+              &times;
+            </button>
+          )}
 
           {suggestions.length > 0 && (
             <ul
