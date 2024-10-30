@@ -23,17 +23,14 @@ export default function Checkout() {
       onClose={() => dispatch(modalActions.closeCheckoutModal())}
     >
       <form>
-        <h2>Checkout</h2>
+        {/* <h2>Checkout</h2> */}
         <p>Total Amount: {currencyFormatter.format(totalPrice)} </p>
 
-        <Input label="Full Name" type="text" id="name" />
-        <Input label="Email" type="email" id="email" />
-        <Input label="Street" type="text" id="street" />
-        <div className="control-row">
-          <Input label="Postal Code" type="text" id="postal-code" />
-          <Input label="City" type="text" id="city" />
-        </div>
-
+        <Input label="Name" type="text" id="name" />
+        <Input label="Phone Number" type="text" id="phone" />
+        <Input label="Email" type="text" id="email" />
+        <Input label="Delivery Address" type="text" id="address" />
+        <Input label="Delivery Instructions" type="text" id="instructions" />
         <p className="modal-actions">
           <Button
             type="button"
