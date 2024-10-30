@@ -258,7 +258,7 @@ const DeliveryPickupModal = () => {
               borderRadius: "4px",
             }}
           />
-          {inputValue && ( 
+          {inputValue && (
             <button
               onClick={() => {
                 setInputValue("");

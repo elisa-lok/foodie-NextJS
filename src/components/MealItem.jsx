@@ -2,6 +2,7 @@ import { currencyFormatter } from "@/utils/formatter";
 import Button from "@/components/UI/Button.jsx";
 import { useDispatch } from "react-redux";
 import { cartActions } from "@/app/store/cart";
+import Link from "next/link";
 
 export default function MealItem({ meal }) {
   const dispatch = useDispatch();
@@ -20,9 +21,13 @@ export default function MealItem({ meal }) {
   return (
     <li className="meal-item">
       <article>
-        <img src={`http://localhost:3000/${meal.image}`} alt={meal.name} />
+        <Link href={`/meals/${meal.id}`}>
+          <img src={`http://localhost:3000/${meal.image}`} alt={meal.name} />
+        </Link>
         <div>
-          <h3>{meal.name}</h3>
+          <Link href={`/meals/${id}`}>
+            <h3>{meal.name}</h3>
+          </Link>
           <div className="meal-item-price">
             {currencyFormatter.format(meal.price)}
           </div>

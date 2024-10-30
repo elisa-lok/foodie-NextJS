@@ -2,7 +2,7 @@ import dbConnect from '@/utils/db';
 import Meals from '@/app/models/Meals';
 import { NextResponse } from 'next/server'
 
-export async function GET(req, res) {
+export async function GET() {
   try {
     await dbConnect();
     const meals = await Meals.find({});
