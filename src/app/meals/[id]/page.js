@@ -12,6 +12,7 @@ import axios from "axios";
 export default function MealDetails() {
   const dispatch = useDispatch();
   const [quantity, setQuantity] = useState(1);
+  const [totalPrice, setTotalPrice] = useState(0); 
   const params = useParams();
   const { id } = params;
   const [meal, setMeal] = useState(null);
@@ -47,13 +48,19 @@ export default function MealDetails() {
       margin: '0 10px',
       fontSize: '16px',
     },
+    totalPrice: {
+      fontSize: '18px',
+      fontWeight: 'bold',
+      margin: '10px 0',
+    },
   };
 
   useEffect(() => {
     const fetchMealData = async () => {
       try {
         const response = await axios.get(`/api/meals/${id}`);
-        setMeal(response.data); 
+        setMeal(response.data);
+        setTotalPrice(response.data.price);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -84,7 +91,10 @@ export default function MealDetails() {
   const handleQuantityChange = (change) => {
     setQuantity(prevQuantity => {
       const newQuantity = prevQuantity + change;
-      return newQuantity < 1 ? 1 : newQuantity; 
+      if (newQuantity < 1) return 1;
+      
+      setTotalPrice(newQuantity * meal.price); 
+      return newQuantity;
     });
   };
 
@@ -99,6 +109,7 @@ export default function MealDetails() {
         <span style={styles.quantityText}>{quantity}</span>
         <button onClick={() => handleQuantityChange(1)} style={styles.quantityButton}>+</button>
       </div>
+      <p style={styles.totalPrice}>Total: {currencyFormatter.format(totalPrice)}</p>
       <Button onClick={addToCart}>Add to cart</Button>
     </div>
   );
