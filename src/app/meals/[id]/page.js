@@ -4,6 +4,7 @@ import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { cartActions } from '@/app/store/cart';
+import { modalActions } from "@/app/store/modal";
 import Button from "@/components/UI/Button";
 import { currencyFormatter } from "@/utils/formatter.js";
 import axios from "axios";
@@ -74,9 +75,10 @@ export default function MealDetails() {
         id: meal.id,
         name: meal.name,
         price: meal.price,
-        quantity, 
+        quantity,
       })
     );
+    dispatch(modalActions.openCartModal());
   }
 
   const handleQuantityChange = (change) => {
