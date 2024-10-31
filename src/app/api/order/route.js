@@ -22,7 +22,7 @@ export async function POST(req) {
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const decodedUserId = decoded.id;
+    const decodedUserId = decoded.userId;
     const { name, phone, email, address, instructions, cartItems, totalPrice, pickupMethod, userId } = await req.json();
     
     if (decodedUserId !== userId) {
