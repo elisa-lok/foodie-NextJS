@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 const LoginModal = () => {
   const dispatch = useDispatch();
   const isLoginModalOpen = useSelector((state) => state.modal.isLoginModalOpen);
+  const savedOrderInfo = useSelector((state) => state.order.orderInfo);
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -38,7 +39,12 @@ const LoginModal = () => {
       localStorage.setItem("user", JSON.stringify(user));
 
       dispatch(modalActions.closeLoginModal());
-      router.push("/");
+
+      if (savedOrderInfo) {
+        dispatch(modalActions.openCheckoutModal());
+      } else {
+        router.push("/");
+      }
     } else {
       setError(response.data.error || "Login failed.");
     }
