@@ -1,6 +1,7 @@
 import dbConnect from '@/utils/db';
-import { NextResponse } from 'next/server';
+import jwt from 'jsonwebtoken';
 import Order from '@/app/models/Order';
+import { NextResponse } from 'next/server';
 
 export async function POST(req) {
   try {

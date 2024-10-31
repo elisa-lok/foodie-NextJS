@@ -75,7 +75,8 @@ export default function Checkout() {
     };
 
     const token = localStorage.getItem("token");
-    if (!token || !(await checkUserLogin(token))) {
+    const response = await checkUserLogin(token);
+    if (!token || !response.data.user) {
       alert("Please login first!");
       dispatch(saveOrderInfo(orderInfo));
       dispatch(modalActions.closeCheckoutModal());
@@ -97,13 +98,13 @@ export default function Checkout() {
         dispatch(modalActions.closeCheckoutModal());
         router.push("/payment");
       } else {
-        alert("Failed to submit order!");
-        //alert(response.data.error);
+        //alert("Failed to submit order!");
+        alert(response.data.error);
       }
     } catch (error) {
       console.error("Error submitting order:", error);
-      alert("Failed to submit order!");
-      //alert(error);
+      //alert("Failed to submit order!");
+      alert(error);
     }
   };
 
