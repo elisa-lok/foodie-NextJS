@@ -3,8 +3,13 @@ import mongoose from "mongoose";
 const OrderSchema = new mongoose.Schema({
   userId: { type: String, required: true },
   name: { type: String, required: true },
-  phone: { type: String, required: true },
-  email: { type: String, required: true },
+  phone: { type: String, required: true, validate: {
+    validator: function (v) {
+      return /^(\+?\d{1,4}[-.\s]?|\()?(\d{3}[-.\s]?)?\d{3}[-.\s]?\d{4}$/.test(v); 
+    },
+    message: props => `${props.value} is not a valid phone number!`
+  } },
+  email: { type: String, required: true, match: [/^\S+@\S+\.\S+$/, 'Please enter a valid email address!'] },
   address: { type: String, required: true },
   instructions: { type: String },
   cartItems: [
