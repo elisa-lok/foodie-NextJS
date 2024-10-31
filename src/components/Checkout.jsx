@@ -7,10 +7,12 @@ import { modalActions } from "@/app/store/modal";
 import { useDispatch, useSelector } from "react-redux";
 import { saveOrderInfo, clearOrderInfo } from "@/app/store/order";
 import { checkUserLogin } from "@/utils/auth";
+import { useRouter } from "next/navigation";
 import axios from "axios";
 
 export default function Checkout() {
   const dispatch = useDispatch();
+  const router = useRouter();
   const cartItems = useSelector((state) => state.cart.items);
   const totalPrice = cartItems.reduce(
     (total, item) => total + item.totalPrice,
@@ -23,17 +25,45 @@ export default function Checkout() {
   const savedOrderInfo = useSelector((state) => state.order.orderInfo);
   const [pickupMethod, setPickupMethod] = useState("0"); // 0: Delivery, 1: Pickup
   const [selectedStore, setSelectedStore] = useState("");
+  const [error, setError] = useState({ email: "", phone: "" });
 
   const initialEmail = JSON.parse(localStorage.getItem("user"))?.email || "";
   const initialAddress = localStorage.getItem("selectedAddress") || "";
 
+  const isValidEmail = (email) => /^\S+@\S+\.\S+$/.test(email);
+  const isValidPhone = (phone) =>
+    /^(\+?\d{1,4}[-.\s]?|\()?(\d{3}[-.\s]?)?\d{3}[-.\s]?\d{4}$/.test(phone);
+
   const submitOrder = async (event) => {
     event.preventDefault();
 
+    const email = event.target.email.value || initialEmail;
+    const phone = event.target.phone.value;
+    let formIsValid = true;
+
+    if (!isValidEmail(email)) {
+      setError((prev) => ({ ...prev, email: "Please enter a valid email." }));
+      formIsValid = false;
+    } else {
+      setError((prev) => ({ ...prev, email: "" }));
+    }
+
+    if (!isValidPhone(phone)) {
+      setError((prev) => ({
+        ...prev,
+        phone: "Please enter a valid phone number.",
+      }));
+      formIsValid = false;
+    } else {
+      setError((prev) => ({ ...prev, phone: "" }));
+    }
+
+    if (!formIsValid) return;
+
     const orderInfo = {
       name: event.target.name.value,
-      phone: event.target.phone.value,
-      email: event.target.email.value || initialEmail,
+      phone: phone,
+      email: email,
       address:
         pickupMethod === "1"
           ? selectedStore
@@ -67,11 +97,13 @@ export default function Checkout() {
         dispatch(modalActions.closeCheckoutModal());
         router.push("/payment");
       } else {
-        alert("Failed to submit order.");
+        alert("Failed to submit order!");
+        //alert(response.data.error);
       }
     } catch (error) {
       console.error("Error submitting order:", error);
-      alert(error);
+      alert("Failed to submit order!");
+      //alert(error);
     }
   };
 
@@ -99,6 +131,7 @@ export default function Checkout() {
             defaultValue={savedOrderInfo?.phone || ""}
             style={{ width: "250px" }}
           />
+          {error.phone && <p style={{ color: "red" }}>{error.phone}</p>}
         </div>
 
         <Input
@@ -107,8 +140,8 @@ export default function Checkout() {
           id="email"
           defaultValue={savedOrderInfo?.email || initialEmail}
           style={{ maxWidth: "420px" }}
-          readOnly
         />
+        {error.email && <p style={{ color: "red" }}>{error.email}</p>}
 
         <p style={{ marginBottom: "10px" }}>
           <label htmlFor="pickupMethod" style={{ fontWeight: "bold" }}>
@@ -155,13 +188,18 @@ export default function Checkout() {
               defaultValue={savedOrderInfo?.address || initialAddress}
               style={{ maxWidth: "600px" }}
             />
-            <Input
-              label="Delivery Instructions"
-              type="text"
-              id="instructions"
-              defaultValue={savedOrderInfo?.instructions || ""}
-              style={{ maxWidth: "600px" }}
-            />
+
+            <p className="control">
+              <label htmlFor="instructions" style={{ fontWeight: "bold" }}>
+                Delivery Instructions
+              </label>
+              <input
+                id="instructions"
+                name="instructions"
+                defaultValue={savedOrderInfo?.instructions || ""}
+                style={{ maxWidth: "600px" }}
+              />
+            </p>
           </>
         )}
         <p className="modal-actions">
