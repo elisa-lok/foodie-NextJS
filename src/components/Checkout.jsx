@@ -96,7 +96,9 @@ export default function Checkout() {
         alert("Order submitted successfully!");
         dispatch(clearOrderInfo());
         dispatch(modalActions.closeCheckoutModal());
-        router.push("/payment");
+        router.push(
+          `/payment?orderId=${response.data.orderId}&amount=${totalPrice}`
+        );
       } else {
         //alert("Failed to submit order!");
         alert(response.data.error);
