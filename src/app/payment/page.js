@@ -77,7 +77,7 @@ export default function Payment() {
       padding: "12px",
       fontSize: "16px",
       fontWeight: "600",
-      color: "#fff",
+      color: "#000",
       backgroundColor: "#ffc404",
       borderRadius: "6px",
       cursor: "pointer",
@@ -146,7 +146,7 @@ export default function Payment() {
           <h2 style={styles.header}>Payment Details</h2>
           <p style={styles.method}>Select your payment method below:</p>
           <Button onClick={openCardModal} style={styles.button}>Debit/Credit Card</Button>
-          <Button style={{ ...styles.button, backgroundColor: "#555" }}>PayPal</Button>
+          <Button style={{ ...styles.button, backgroundColor: "#555", color: "#fff" }}>PayPal</Button>
           {showCardModal && (
             <div style={styles.cardModal} onClick={closeCardModal}>
               <div style={styles.modalContent} onClick={(e) => e.stopPropagation()}>
