@@ -96,17 +96,15 @@ export default function Checkout() {
         alert("Order submitted successfully!");
         dispatch(clearOrderInfo());
         dispatch(modalActions.closeCheckoutModal());
-        router.push(
-          `/payment?orderId=${response.data.orderId}&amount=${totalPrice}`
-        );
+        router.push(`/payment?orderId=${response.data.orderId}`);
       } else {
-        //alert("Failed to submit order!");
-        alert(response.data.error);
+        alert("Failed to submit order!");
+        //alert(response.data.error);
       }
     } catch (error) {
       console.error("Error submitting order:", error);
-      //alert("Failed to submit order!");
-      alert(error);
+      alert("Failed to submit order!");
+      //alert(error);
     }
   };
 
