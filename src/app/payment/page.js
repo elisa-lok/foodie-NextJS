@@ -3,6 +3,7 @@
 import { useSearchParams, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import Button from "@/components/UI/Button";
+import Modal from "@/components/UI/Modal";
 import { currencyFormatter } from "@/utils/formatter";
 import axios from "axios";
 
@@ -98,15 +99,45 @@ export default function Payment() {
       bottom: 0,
       backgroundColor: "rgba(0, 0, 0, 0.5)", 
     },
+    button: {
+      marginTop: "20px",
+      width: "100%",
+      padding: "12px",
+      fontSize: "16px",
+      fontWeight: "600",
+      backgroundColor: "#ffc404",
+      border: "none",
+      cursor: "pointer",
+      borderRadius: "6px",
+    },
     modalContent: {
-      backgroundColor: "#fff", 
-      opacity: 1,              
+      position: "relative", 
+      backgroundColor: "#fff",
       padding: "20px",
       borderRadius: "8px",
-      width: "400px",
+      opacity: 1,
       textAlign: "center",
     },
-     
+    closeButton: {
+      position: "absolute",
+      top: "-20px",
+      right: "-10px",
+      background: "none",
+      border: "none",
+      fontSize: "20px",
+      fontWeight: "bold",
+      color: "#333",
+      cursor: "pointer",
+    },
+    input: {
+      width: "100%",
+      padding: "10px",
+      margin: "10px 0",
+      fontSize: "16px",
+      borderRadius: "4px",
+      border: "1px solid #ddd",
+      backgroundColor: "#fff", 
+    }, 
   };
 
   useEffect(() => {
@@ -147,20 +178,17 @@ export default function Payment() {
           <p style={styles.method}>Select your payment method below:</p>
           <Button onClick={openCardModal} style={styles.button}>Debit/Credit Card</Button>
           <Button style={{ ...styles.button, backgroundColor: "#555", color: "#fff" }}>PayPal</Button>
-          {showCardModal && (
-            <div style={styles.cardModal} onClick={closeCardModal}>
-              <div style={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-                <h3>Add Card Details</h3>
-                <input type="text" placeholder="Card Number" />
-                <input type="text" placeholder="Expiry Date" />
-                <input type="text" placeholder="CVV" />
-                <Button onClick={closeCardModal} style={styles.button}>Save Card</Button>
-              </div>
-            </div>
-          )}
+          <Modal open={showCardModal} onClose={closeCardModal} className="card-modal">
+            <div style={styles.modalContent}>
+            <button onClick={closeCardModal} style={styles.closeButton}>×</button>
+              <input type="text" placeholder="Card Number" style={styles.input} />
+              <input type="text" placeholder="MM/YY" style={styles.input} />
+              <input type="text" placeholder="CVV" style={styles.input} />
+          <Button onClick={closeCardModal} style={styles.button}>Save Card</Button>
+          </div>
+        </Modal>
           <p style={{ marginTop: "20px", color: "#666" }}>Note: Your payment information is securely handled.</p>
         </div>
-
         <div style={styles.rightBox}>
           <h2 style={styles.header}>Order Information</h2>
           {orderInfo && (

@@ -17,8 +17,10 @@ export default function Modal({ children, open, onClose, className }) {
     if (open) {
       modal.showModal();
       modal.addEventListener("cancel", handleCancel);
+      document.body.style.overflow = "hidden";
     } else if (modal.open) {
       modal.close();
+      document.body.style.overflow = "";
     }
 
     return () => {
@@ -26,6 +28,7 @@ export default function Modal({ children, open, onClose, className }) {
         modal.close();
       }
       modal.removeEventListener("cancel", handleCancel);
+      document.body.style.overflow = "";
     };
   }, [open, onClose]);
 
