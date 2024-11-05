@@ -170,6 +170,54 @@ export default function Payment() {
     setShowCardModal(false);
   };
 
+  const validateCardInfo = () => {
+    const isValidCardNumber = (cardNumber) => {
+      let sum = 0;
+      let shouldDouble = false;
+      for (let i = cardNumber.length - 1; i >= 0; i--) {
+        let digit = parseInt(cardNumber[i]);
+        if (shouldDouble) {
+          digit *= 2;
+          if (digit > 9) digit -= 9;
+        }
+        sum += digit;
+        shouldDouble = !shouldDouble;
+      }
+      return sum % 10 === 0;
+    };
+
+    if (!isValidCardNumber(cardNumber)) {
+      alert("Invalid card number.");
+      return false;
+    }
+  
+    if (!/^\d{2}\/\d{2}$/.test(expiryDate)) {
+      alert("Invalid expiry date format. Use MM/YY.");
+      return false;
+    }
+  
+    const [expMonth, expYear] = expiryDate.split("/").map(Number);
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear() % 100; // YY format
+    const currentMonth = currentDate.getMonth() + 1;
+  
+    if (expYear < currentYear || (expYear === currentYear && expMonth < currentMonth)) {
+      alert("Card has expired.");
+      return false;
+    }
+  
+    if (!/^\d{3,4}$/.test(cvv)) {
+      alert("Invalid CVV.");
+      return false;
+    }
+  
+    return true;
+  };
+
+  const handleSaveCard = () => {
+     if (!validateCardInfo()) return; 
+  };
+
   return (
     <div style={styles.container}>
       <div style={styles.paymentSection}>
@@ -184,7 +232,7 @@ export default function Payment() {
               <input type="text" placeholder="Card Number" style={styles.input} />
               <input type="text" placeholder="MM/YY" style={styles.input} />
               <input type="text" placeholder="CVV" style={styles.input} />
-          <Button onClick={closeCardModal} style={styles.button}>Save Card</Button>
+          <Button onClick={handleSaveCard} style={styles.button}>Save Card</Button>
           </div>
         </Modal>
           <p style={{ marginTop: "20px", color: "#666" }}>Note: Your payment information is securely handled.</p>
