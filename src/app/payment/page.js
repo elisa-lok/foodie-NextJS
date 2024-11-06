@@ -5,6 +5,8 @@ import { useState, useEffect } from "react";
 import Button from "@/components/UI/Button";
 import Modal from "@/components/UI/Modal";
 import { currencyFormatter } from "@/utils/formatter";
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import axios from "axios";
 
 export default function Payment() {
@@ -214,6 +216,17 @@ export default function Payment() {
     return true;
   };
 
+  const openPOLiPayment = async () => {
+    try {
+      const response = await axios.post("/api/payment/poli", { orderId });
+      if (response.data && response.data.redirectUrl) {
+        window.location.href = response.data.redirectUrl;
+      }
+    } catch (error) {
+      console.error("Error initiating POLi payment:", error);
+    }
+  };
+
   const handleSaveCard = () => {
      if (!validateCardInfo()) return; 
   };
@@ -225,6 +238,7 @@ export default function Payment() {
           <h2 style={styles.header}>Payment Details</h2>
           <p style={styles.method}>Select your payment method below:</p>
           <Button onClick={openCardModal} style={styles.button}>Debit/Credit Card</Button>
+          <Button onClick={openPOLiPayment} style={{ ...styles.button, backgroundColor: "#008080", color: "#fff" }}>POLi Payments</Button>
           <Button style={{ ...styles.button, backgroundColor: "#555", color: "#fff" }}>PayPal</Button>
           <Modal open={showCardModal} onClose={closeCardModal} className="card-modal">
             <div style={styles.modalContent}>
