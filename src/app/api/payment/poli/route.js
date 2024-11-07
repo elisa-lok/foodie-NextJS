@@ -4,7 +4,7 @@ import Order from "@/app/models/Order";
 
 export async function POST(req) {
   await dbConnect();
-  
+
   try {
     const { orderId } = await req.json();
     if(!orderId) {
@@ -40,19 +40,17 @@ export async function POST(req) {
       CancellationURL: process.env.POLI_RETURN_URL,
     };
 
-    const poliResponse = await fetch(
+    const poliResponse = await axios.post(
       `${process.env.POLI_API_URL}/v2/Transaction/Initiate`,
+      poliRequestData,
       {
-        method: "POST",
+        auth: {
+          username: process.env.POLI_API_KEY,
+          password: process.env.POLI_API_SECRET,
+        },
         headers: {
           "Content-Type": "application/json",
-          Authorization:
-            "Basic " +
-            Buffer.from(
-              `${process.env.POLI_API_KEY}:${process.env.POLI_API_SECRET}`
-            ).toString("base64"),
         },
-        body: JSON.stringify(poliRequestData),
       }
     );
 
@@ -65,10 +63,27 @@ export async function POST(req) {
       )
     }
 
-    const poliData = await poliResponse.json();
-    const { NavigateURL } = poliData;
+    const transactionId = response.data.TransactionID; 
 
-    return NextResponse.json({ redirectUrl: NavigateURL });
+    const updatedOrder = await Order.findOneAndUpdate(
+      { orderId }, 
+      { transactionId }, 
+      { new: true }
+    );
+
+    if (!updatedOrder) {
+      return NextResponse.json({
+        status: 500,
+        message: "Failed to update order with transactionId",
+      });
+    }
+
+    return NextResponse.json({
+      status: 200,
+      message: "Payment initiation successful",
+      transactionId,
+      paymentURL: response.data.NavigateURL, 
+    });
   }catch(error) {
     return NextResponse.json(
       {
