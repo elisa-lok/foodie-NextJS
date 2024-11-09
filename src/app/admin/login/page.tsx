@@ -5,8 +5,8 @@ import { useRouter } from "next/navigation";
 import "./login.css"; 
 
 export default function LoginPage() {
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const router = useRouter();
 
   const handleLogin = async (e: FormEvent) => {
