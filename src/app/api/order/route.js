@@ -31,6 +31,7 @@ export async function POST(req) {
       );
     }
    
+    const transactionId = '';
     const newOrder = new Order({
       userId,                       
       name,           
@@ -41,6 +42,7 @@ export async function POST(req) {
       cartItems,             
       totalPrice,                   
       pickupMethod,
+      transactionId,
     });
 
     await newOrder.save();

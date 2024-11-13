@@ -31,7 +31,7 @@ const OrderSchema = new mongoose.Schema({
   pickupMethod: { type: Number, required: true },  // 0: Delivery, 1: Pickup
   pickupTime: { type: Date }, 
   createdAt: { type: Date, default: Date.now },
-  transactionId: { type: String },
+  transactionId: { type: String, default: '' },
 });
 
 export default mongoose.models.Order || mongoose.model("Order", OrderSchema);
