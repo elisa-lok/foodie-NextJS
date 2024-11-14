@@ -29,6 +29,9 @@ export default function PaymentCompletePage() {
       
       if (response.data.status === 200) {
         console.log("Payment confirmed successfully");
+        setTimeout(() => {
+          router.push(`/order/details?transactionId=${transactionId}`);
+        }, 3000); 
       } else {
         console.error("Failed to confirm payment status");
       }
@@ -38,19 +41,32 @@ export default function PaymentCompletePage() {
   };
 
   return (
-    <div style={{ textAlign: 'center', marginTop: '50px' }}>
+    <>
+      <div style={{ 
+      textAlign: 'center', 
+      marginTop: '50px',
+      fontFamily: 'Arial, sans-serif',
+      padding: '20px',
+      border: '2px solid #ffc404',
+      borderRadius: '10px',
+      boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)'
+    }}>
       {paymentStatus === 'success' ? (
         <>
-          <h1>Payment Successful</h1>
+          <h1 style={{ color: '#4caf50' }}>Payment Successful</h1>
           <p>Thank you for your purchase!</p>
-          <p>Your transaction ID is: {transactionId}</p>
+          <p>Your transaction ID is: <strong>{transactionId}</strong></p>
+          <p style={{ color: '#888', fontSize: '14px', marginTop: '20px' }}>
+            Redirecting to your order details in 3 seconds...
+          </p>
         </>
       ) : (
         <>
-          <h1>Payment Failed</h1>
+          <h1 style={{ color: '#f44336' }}>Payment Failed</h1>
           <p>There was an issue with your payment. Please try again.</p>
         </>
       )}
-    </div>
+      </div>
+    </>
   );
 }

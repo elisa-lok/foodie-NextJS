@@ -85,7 +85,7 @@ export async function POST(req) {
       message: "Payment initiation successful",
       transactionId,
       //redirectUrl: response.data.NavigateURL, 
-      redirectUrl: '/payment/complete',
+      redirectUrl: `/payment/complete?status=success&transactionId=${transactionId}`,
     });
   }catch(error) {
     return NextResponse.json(

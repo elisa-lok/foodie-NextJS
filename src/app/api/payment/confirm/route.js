@@ -1,6 +1,6 @@
-import dbConnect from "@/utils/dbConnect";
+import dbConnect from '@/utils/db';
 import { NextResponse } from 'next/server';
-import axios from 'axios';
+//import axios from 'axios';
 
 export async function POST(request) {
   await dbConnect();
