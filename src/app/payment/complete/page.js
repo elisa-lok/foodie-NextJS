@@ -45,20 +45,24 @@ export default function PaymentCompletePage() {
       <div style={{ 
       textAlign: 'center', 
       marginTop: '50px',
+      width: '80%',
       fontFamily: 'Arial, sans-serif',
       padding: '20px',
-      border: '2px solid #ffc404',
-      borderRadius: '10px',
-      boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)'
+      border: '1px solid #ffc404',
+      borderRadius: '2px',
+      boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+      margin: '0 auto',
     }}>
       {paymentStatus === 'success' ? (
         <>
-          <h1 style={{ color: '#4caf50' }}>Payment Successful</h1>
+          <h1 style={{ color: '#ffc404' }}>Payment Successful!</h1>
           <p>Thank you for your purchase!</p>
-          <p>Your transaction ID is: <strong>{transactionId}</strong></p>
           <p style={{ color: '#888', fontSize: '14px', marginTop: '20px' }}>
             Redirecting to your order details in 3 seconds...
           </p>
+            <p style={{ marginTop: '20px' }}>If not redirected automatically, 
+              please <a style={{ color: 'red' }} href={`/order/details?transactionId=${transactionId}`}> click here</a>.
+            </p>              
         </>
       ) : (
         <>

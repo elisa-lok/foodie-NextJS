@@ -217,7 +217,6 @@ export default function Payment() {
   };
 
   const openPOLiPayment = async () => {
-    alert(111);
     try {
       const response = await axios.post("/api/payment/poli", { orderId });
       if (response.data && response.data.redirectUrl) {
