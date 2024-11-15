@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 import { checkUserLogin } from "@/utils/auth";
 import AccountSidebar from "@/components/AccountSidebar";
 import AccountContent from "@/components/AccountContent";
-import Header from '@/components/Header';
 import "./account.css";
 
 export default function AccountPage() {
@@ -61,8 +60,7 @@ export default function AccountPage() {
   }
 
   return (
-    <>
-      <Header />
+    <>   
       <main className="account-page min-h-screen flex bg-gradient-to-r from-[#29251c] to-[#2c2306] mt-[-50px]">
         <AccountSidebar selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
         <AccountContent selectedTab={selectedTab} user={user} />

@@ -2,7 +2,10 @@
 
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { currencyFormatter, formatDate } from "@/utils/formatter"; 
 import axios from 'axios';
+import styles from './details.css'; 
+import {PaymentStatusShow} from '@/utils/functions';
 
 export default function OrderDetailsPage() {
   const searchParams = useSearchParams();
@@ -36,37 +39,43 @@ export default function OrderDetailsPage() {
   };
 
   if (loading) {
-    return <div style={{ textAlign: 'center', marginTop: '50px' }}>Loading...</div>;
+    return <div className={`${styles.loading}`}>Loading...</div>;
   }
 
   if (error) {
-    return <div style={{ textAlign: 'center', color: 'red', marginTop: '50px' }}>{error}</div>;
+    return <div className={`${styles.error}`}>{error}</div>;
   }
 
   return (
-    <div style={{
-      width: '80%',
-      margin: '50px auto',
-      padding: '20px',
-      border: '1px solid #ddd',
-      borderRadius: '10px',
-      boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
-      fontFamily: 'Arial, sans-serif'
-    }}>
-      <h1 style={{ color: '#4caf50' }}>Order Details</h1>
-      
-      <p><strong>Transaction ID:</strong> {orderDetails.transactionId}</p>
-      <p><strong>Status:</strong> {orderDetails.status}</p>
-      <p><strong>Total Amount:</strong> ${orderDetails.amount}</p>
-      <p><strong>Items:</strong></p>
-      
-      <ul>
-        {orderDetails.cartItems?.map((item, index) => (
-          <li key={index}>
-            {item.name} - Quantity: {item.quantity} - Price: ${item.price}
-          </li>
-        ))}
-      </ul>
-    </div>
+    <div className="order-details-container">
+
+    {orderDetails && (
+      <div className="order-info-card">
+          <h2 className="order-section-title">Order Details</h2>
+        <p className="order-text">Order Number: {orderDetails._id}</p>
+        <p className="order-text">Order Recipient: {orderDetails.name}</p>
+        <p className="order-text">Email: {orderDetails.email}</p>
+        <p className="order-text">Phone Number: {orderDetails.phone}</p>
+        <p className="order-text">Order Handle: {orderDetails.pickupMethod === 0 ? 'Delivery' : 'Pickup'}</p>
+        <p className="order-text">Address: {orderDetails.address}</p>
+        <p className="order-text">OrderStatus: {orderDetails.orderStatus}</p>
+        <p className="order-text">PaymentStatus: {PaymentStatusShow(orderDetails.paymentStatus)}</p>
+        <p className="order-text">PaymentMethod: {orderDetails.paymentMethod}</p>
+        <p className="order-text">CreatedAt: {formatDate(orderDetails.createdAt)}</p>
+
+        <h2 className="order-section-title">Items</h2>
+        <ul className="order-items-list">
+          {orderDetails.cartItems.map((item) => (
+            <li key={item.id} className="order-item">
+              <span className="order-item-name">{item.name}</span>
+              <span className="order-item-price">{currencyFormatter.format(item.price)} x {item.quantity}</span>
+            </li>
+          ))}
+        </ul>
+        <p className="order-total">Total Amount: {currencyFormatter.format(orderDetails.totalPrice)}</p>
+        <a href={`/order/details?transactionId=${orderDetails.transactionId}`} className="order-back-link">Back to Order</a>
+      </div>
+    )}
+  </div>
   );
 }
