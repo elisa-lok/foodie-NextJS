@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import dbConnect from '@/utils/db';
-import Order from "@/models/Order";
-import User from "@/models/User";
+import User from "@/app/models/User";
+import Order from '@/app/models/Order';
 import jwt from 'jsonwebtoken';
 
 export async function GET(req, { params }) {
