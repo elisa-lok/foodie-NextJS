@@ -99,9 +99,9 @@ const OrderList = ({ userId }) => {
             >
               <p style={{ margin: "5px 0", color: "#333" }}>Order Number: {order._id}</p>
               <p style={{ margin: "5px 0", color: "#333" }}>
-                Total Amount: ${order.totalAmount}
+                Total Amount: ${order.totalPrice}
               </p>
-              <p style={{ margin: "5px 0", color: "#333" }}>Status: {order.status}</p>
+              <p style={{ margin: "5px 0", color: "#333" }}>Status: {order.orderStatus}</p>
               <p style={{ margin: "5px 0", color: "#333" }}>
                 Order Date: {new Date(order.createdAt).toLocaleString()}
               </p>
