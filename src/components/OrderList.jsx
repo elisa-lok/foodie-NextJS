@@ -16,8 +16,8 @@ const OrderList = ({ userId }) => {
     const token = localStorage.getItem("token");
 
     try {
-      setLoading(true); 
-      const response = await axios.get(`/api/order/${userId}`, {
+      setLoading(true);
+      const response = await axios.get(`/api/orders/${userId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -32,7 +32,7 @@ const OrderList = ({ userId }) => {
       console.error("Error fetching orders:", err);
       setError("An error occurred while fetching orders.");
     } finally {
-      setLoading(false); 
+      setLoading(false);
     }
   };
 
@@ -46,7 +46,14 @@ const OrderList = ({ userId }) => {
 
   if (error) {
     return (
-      <div style={{ textAlign: "center", fontSize: "18px", margin: "20px 0", color: "red" }}>
+      <div
+        style={{
+          textAlign: "center",
+          fontSize: "18px",
+          margin: "20px 0",
+          color: "red",
+        }}
+      >
         {error}
       </div>
     );
@@ -97,11 +104,15 @@ const OrderList = ({ userId }) => {
                 backgroundColor: "#f9f9f9",
               }}
             >
-              <p style={{ margin: "5px 0", color: "#333" }}>Order Number: {order._id}</p>
+              <p style={{ margin: "5px 0", color: "#333" }}>
+                Order Number: {order._id}
+              </p>
               <p style={{ margin: "5px 0", color: "#333" }}>
                 Total Amount: ${order.totalPrice}
               </p>
-              <p style={{ margin: "5px 0", color: "#333" }}>Status: {order.orderStatus}</p>
+              <p style={{ margin: "5px 0", color: "#333" }}>
+                Status: {order.orderStatus}
+              </p>
               <p style={{ margin: "5px 0", color: "#333" }}>
                 Order Date: {new Date(order.createdAt).toLocaleString()}
               </p>
