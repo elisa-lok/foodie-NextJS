@@ -218,7 +218,10 @@ export default function Payment() {
 
   const openPOLiPayment = async () => {
     try {
-      const response = await axios.post("/api/payment/poli", { orderId });
+      const response = await axios.post("/api/payment/poli", { orderId }, {
+       headers: {
+         Authorization: `Bearer ${localStorage.getItem("token")}`,
+      }});
       if (response.data && response.data.redirectUrl) {
         window.location.href = response.data.redirectUrl;
       }

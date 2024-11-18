@@ -26,8 +26,11 @@ export default function PaymentCompletePage() {
 
   const confirmPayment = async (transactionId) => {
     try {
+      const token = localStorage.getItem("token");
       const response = await axios.post('/api/payment/confirm', {
         transactionId,
+      }, {
+        headers: { Authorization: `Bearer ${token}` },
       });
       
       if (response.data.status === 200) {

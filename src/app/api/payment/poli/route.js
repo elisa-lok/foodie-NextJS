@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import dbConnect from '@/utils/db';
 import Order from "@/app/models/Order";
 import { v4 as uuidv4 } from 'uuid';
+import jwt from 'jsonwebtoken';
 
 export async function POST(req) {
   await dbConnect();
@@ -17,7 +18,18 @@ export async function POST(req) {
       )
     }
 
-    const order = await Order.findOne({ _id: orderId });
+    const authHeader = req.headers.get("authorization");
+    if (!authHeader) {
+      return NextResponse.json(
+        { status: 401, error: "Authorization token is missing." }
+      );
+    }
+
+    const token = authHeader.split(' ')[1];
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    const order = await Order.findOne({ _id: orderId, userId: decoded.userId });
 
     if(!order) {
       return NextResponse.json(
