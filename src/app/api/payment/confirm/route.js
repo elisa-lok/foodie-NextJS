@@ -35,7 +35,7 @@ export async function POST(request) {
 
     const updatedOrder = await Order.findOneAndUpdate(
       { transactionId: transactionId }, 
-      { paymentStatus: 1, paymentMethod: 2 }, 
+      { paymentStatus: 1, paymentMethod: 1, orderStatus: 1 }, 
       { new: true } 
     );
 
@@ -45,7 +45,7 @@ export async function POST(request) {
 
     const orderId = updatedOrder._id;
 
-    return NextResponse.json({ status: 200, message: 'Payment confirmed', orderId: orderId});
+    return NextResponse.json({ status: 200, orderId: orderId});
   } catch (error) {
     return NextResponse.json({ status: 500, error: "Internal Server Error" });
   }

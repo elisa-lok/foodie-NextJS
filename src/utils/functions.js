@@ -7,3 +7,18 @@ export const PaymentStatusShow = (status) => {
       return 'paid';
   }
 }
+
+export const PaymentMethodShow = (status) => {
+  switch (status) {
+    case 0:
+      return 'pending';
+    
+    case 1:
+      return 'processing';
+    
+    case 2:
+      return 'completed';
+    
+    
+  }
+}

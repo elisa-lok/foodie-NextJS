@@ -2,6 +2,11 @@
 
 import { useEffect, useState } from "react";
 import axios from "axios";
+import {
+  PAYMENT_STATUSES,
+  PAYMENT_METHODS,
+  ORDER_STATUSES,
+} from "@/constants/payment";
 
 const OrderList = ({ userId }) => {
   const [orders, setOrders] = useState([]);
@@ -112,9 +117,15 @@ const OrderList = ({ userId }) => {
                 <tr key={order._id}>
                   <td style={tableCellStyle}>{order._id}</td>
                   <td style={tableCellStyle}>{order.name}</td>
-                  <td style={tableCellStyle}>{order.orderStatus}</td>
-                  <td style={tableCellStyle}>{order.paymentStatus}</td>
-                  <td style={tableCellStyle}>{order.paymentMethod}</td>
+                  <td style={tableCellStyle}>
+                    {ORDER_STATUSES[order.orderStatus]}
+                  </td>
+                  <td style={tableCellStyle}>
+                    {PAYMENT_STATUSES[order.paymentStatus]}
+                  </td>
+                  <td style={tableCellStyle}>
+                    {PAYMENT_METHODS[order.paymentMethod]}
+                  </td>
                   <td style={tableCellStyle}>
                     {new Date(order.createdAt).toLocaleString()}
                   </td>

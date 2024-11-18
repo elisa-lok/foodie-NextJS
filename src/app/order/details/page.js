@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { currencyFormatter, formatDate } from "@/utils/formatter"; 
 import axios from 'axios';
 import styles from './details.css'; 
-import {PaymentStatusShow} from '@/utils/functions';
+import { PAYMENT_STATUSES, ORDER_STATUSES, PAYMENT_METHODS } from '@/constants/payment';
 
 export default function OrderDetailsPage() {
   const searchParams = useSearchParams();
@@ -58,9 +58,9 @@ export default function OrderDetailsPage() {
         <p className="order-text">Phone Number: {orderDetails.phone}</p>
         <p className="order-text">Order Handle: {orderDetails.pickupMethod === 0 ? 'Delivery' : 'Pickup'}</p>
         <p className="order-text">Address: {orderDetails.address}</p>
-        <p className="order-text">OrderStatus: {orderDetails.orderStatus}</p>
-        <p className="order-text">PaymentStatus: {PaymentStatusShow(orderDetails.paymentStatus)}</p>
-        <p className="order-text">PaymentMethod: {orderDetails.paymentMethod}</p>
+        <p className="order-text">OrderStatus: {ORDER_STATUSES[orderDetails.orderStatus]}</p>
+        <p className="order-text">PaymentStatus: {PAYMENT_STATUSES[orderDetails.paymentStatus]}</p>
+        <p className="order-text">PaymentMethod: {PAYMENT_METHODS[orderDetails.paymentMethod]}</p>
         <p className="order-text">CreatedAt: {formatDate(orderDetails.createdAt)}</p>
 
         <h2 className="order-section-title">Items</h2>
