@@ -13,7 +13,8 @@ export async function GET() {
     console.error(error);
     return NextResponse.json(
       {
-        status: 500
+        status: 500,
+        error: 'Failed to fetch meals',
       }
     )
   }

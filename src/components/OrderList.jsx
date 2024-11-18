@@ -7,6 +7,8 @@ const OrderList = ({ userId }) => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const ordersPerPage = 10;
 
   useEffect(() => {
     fetchOrders();
@@ -36,6 +38,14 @@ const OrderList = ({ userId }) => {
     }
   };
 
+  const indexOfLastOrder = currentPage * ordersPerPage;
+  const indexOfFirstOrder = indexOfLastOrder - ordersPerPage;
+  const currentOrders = orders.slice(indexOfFirstOrder, indexOfLastOrder);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
   if (loading) {
     return (
       <div style={{ textAlign: "center", fontSize: "18px", margin: "20px 0" }}>
@@ -62,20 +72,11 @@ const OrderList = ({ userId }) => {
   return (
     <div
       style={{
-        width: "80%",
+        width: "90%",
         margin: "0 auto",
         fontFamily: "Arial, sans-serif",
       }}
     >
-      <h2
-        style={{
-          textAlign: "center",
-          color: "#4caf50",
-          margin: "20px 0",
-        }}
-      >
-        Your Orders
-      </h2>
       {orders.length === 0 ? (
         <p
           style={{
@@ -87,41 +88,98 @@ const OrderList = ({ userId }) => {
           No orders found.
         </p>
       ) : (
-        <ul
-          style={{
-            listStyleType: "none",
-            padding: 0,
-          }}
-        >
-          {orders.map((order) => (
-            <li
-              key={order._id}
-              style={{
-                border: "1px solid #ddd",
-                borderRadius: "5px",
-                padding: "15px",
-                marginBottom: "10px",
-                backgroundColor: "#f9f9f9",
-              }}
-            >
-              <p style={{ margin: "5px 0", color: "#333" }}>
-                Order Number: {order._id}
-              </p>
-              <p style={{ margin: "5px 0", color: "#333" }}>
-                Total Amount: ${order.totalPrice}
-              </p>
-              <p style={{ margin: "5px 0", color: "#333" }}>
-                Status: {order.orderStatus}
-              </p>
-              <p style={{ margin: "5px 0", color: "#333" }}>
-                Order Date: {new Date(order.createdAt).toLocaleString()}
-              </p>
-            </li>
-          ))}
-        </ul>
+        <>
+          <table
+            style={{
+              width: "100%",
+              borderCollapse: "collapse",
+              marginBottom: "20px",
+            }}
+          >
+            <thead>
+              <tr>
+                <th style={tableHeaderStyle}>Order Number</th>
+                <th style={tableHeaderStyle}>Buyer</th>
+                <th style={tableHeaderStyle}>Order Status</th>
+                <th style={tableHeaderStyle}>Payment Status</th>
+                <th style={tableHeaderStyle}>Payment Method</th>
+                <th style={tableHeaderStyle}>Order Date</th>
+                <th style={tableHeaderStyle}>Details</th>
+              </tr>
+            </thead>
+            <tbody>
+              {currentOrders.map((order) => (
+                <tr key={order._id}>
+                  <td style={tableCellStyle}>{order._id}</td>
+                  <td style={tableCellStyle}>{order.name}</td>
+                  <td style={tableCellStyle}>{order.orderStatus}</td>
+                  <td style={tableCellStyle}>{order.paymentStatus}</td>
+                  <td style={tableCellStyle}>{order.paymentMethod}</td>
+                  <td style={tableCellStyle}>
+                    {new Date(order.createdAt).toLocaleString()}
+                  </td>
+                  <td style={tableCellStyle}>
+                    <a
+                      href={`/order/details?orderId=${order._id}`}
+                      style={{
+                        color: "#007bff",
+                        textDecoration: "none",
+                      }}
+                    >
+                      Details
+                    </a>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <Pagination
+            currentPage={currentPage}
+            totalPages={Math.ceil(orders.length / ordersPerPage)}
+            onPageChange={handlePageChange}
+          />
+        </>
       )}
     </div>
   );
+};
+
+const Pagination = ({ currentPage, totalPages, onPageChange }) => {
+  const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
+
+  return (
+    <div style={{ textAlign: "center", margin: "20px 0" }}>
+      {pageNumbers.map((number) => (
+        <button
+          key={number}
+          onClick={() => onPageChange(number)}
+          style={{
+            margin: "0 5px",
+            padding: "8px 16px",
+            backgroundColor: currentPage === number ? "#4caf50" : "#fff",
+            color: currentPage === number ? "#fff" : "#000",
+            border: "1px solid #ccc",
+            borderRadius: "4px",
+            cursor: "pointer",
+          }}
+        >
+          {number}
+        </button>
+      ))}
+    </div>
+  );
+};
+
+const tableHeaderStyle = {
+  padding: "10px",
+  border: "1px solid #ddd",
+  textAlign: "left",
+  backgroundColor: "#fddfgg",
+};
+
+const tableCellStyle = {
+  padding: "10px",
+  border: "1px solid #ddd",
 };
 
 export default OrderList;

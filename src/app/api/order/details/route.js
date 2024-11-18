@@ -5,20 +5,20 @@ import { NextResponse } from 'next/server';
 
 export async function GET(req) {
   const { searchParams } = new URL(req.url); 
-  const transactionId = searchParams.get('transactionId');
+  const orderId = searchParams.get('orderId');
 
-  if (!transactionId) {
+  if (!orderId) {
     return NextResponse.json(
       {
         status: 400,
-        error: "transactionId is missing",
+        error: "orderId is missing",
       }
     )
   }
   
   await dbConnect();
   try {
-    const order = await Order.findOne({transactionId: transactionId});
+    const order = await Order.findOne({_id: orderId});
     if (!order) {
       return NextResponse.json(
         {

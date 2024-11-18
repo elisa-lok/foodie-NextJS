@@ -85,13 +85,14 @@ export async function POST(req) {
       message: "Payment initiation successful",
       transactionId,
       //redirectUrl: response.data.NavigateURL, 
-      redirectUrl: `/payment/complete?status=success&transactionId=${transactionId}`,
+      redirectUrl: `/payment/complete?status=success&orderId=${orderId}&transactionId=${transactionId}`,
     });
   }catch(error) {
     return NextResponse.json(
       {
         status: 500,
-        error: error.message || "Internal Server Error",
+        //error: error.message || "Internal Server Error",
+        error: "Internal Error",
       }
     )
   }

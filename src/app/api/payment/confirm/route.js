@@ -1,5 +1,6 @@
 import dbConnect from '@/utils/db';
 import { NextResponse } from 'next/server';
+import Order from '@/app/models/Order';
 //import axios from 'axios';
 
 export async function POST(request) {
@@ -10,7 +11,7 @@ export async function POST(request) {
     if (!transactionId) {
       return NextResponse.json({
         status: 400,
-        message: 'Transaction ID is required'
+        error: 'Transaction ID is required'
       })
     }
 
@@ -29,22 +30,23 @@ export async function POST(request) {
     const paymentStatus = 'success';
 
     if (paymentStatus !== 'success') {
-      return NextResponse.json({ status: 400, message: 'Payment confirmation failed' });
+      return NextResponse.json({ status: 400, error: 'Payment confirmation failed' });
     }
 
     const updatedOrder = await Order.findOneAndUpdate(
-      { transactionId }, 
+      { transactionId: transactionId }, 
       { paymentStatus: 1, paymentMethod: 2 }, 
       { new: true } 
     );
 
     if (!updatedOrder) {
-      return NextResponse.json({ status: 400, message: 'Order paymentStatus failed updated' });
+      return NextResponse.json({ status: 400, error: 'Order paymentStatus failed updated' });
     }
 
-    return NextResponse.json({ status: 200, message: 'Payment confirmed' });
+    const orderId = updatedOrder._id;
+
+    return NextResponse.json({ status: 200, message: 'Payment confirmed', orderId: orderId});
   } catch (error) {
-    console.error('Error confirming payment:', error);
-    return NextResponse.json({ status: 500, message: 'Failed to confirm payment' });
+    return NextResponse.json({ status: 500, error: "Internal Server Error" });
   }
 }

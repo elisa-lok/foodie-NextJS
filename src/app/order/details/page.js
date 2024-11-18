@@ -14,17 +14,17 @@ export default function OrderDetailsPage() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const transactionId = searchParams.get("transactionId");
-    if (transactionId) {
-      fetchOrderDetails(transactionId);
+    const orderId = searchParams.get("orderId");
+    if(orderId){
+      fetchOrderDetails(orderId);
     }
   }, [searchParams]);
 
-  const fetchOrderDetails = async (transactionId) => {
+  const fetchOrderDetails = async (orderId) => {
     try {
       setLoading(true);
       const response = await axios.get(`/api/order/details`, {
-        params: { transactionId }
+        params: { orderId }
       });
       if (response.data.status === 200) {
         setOrderDetails(response.data.order);
@@ -73,7 +73,7 @@ export default function OrderDetailsPage() {
           ))}
         </ul>
         <p className="order-total">Total Amount: {currencyFormatter.format(orderDetails.totalPrice)}</p>
-        <a href={`/order/details?transactionId=${orderDetails.transactionId}`} className="order-back-link">Back to Order</a>
+        <a href='/account' className="order-back-link">Back to Account</a>
       </div>
     )}
   </div>

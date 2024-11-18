@@ -3,18 +3,21 @@
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import axios from 'axios'; 
+import { useRouter } from 'next/navigation';
 
 export default function PaymentCompletePage() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const [paymentStatus, setPaymentStatus] = useState(null);
-  const [transactionId, setTransactionId] = useState(null);
+  const [orderId, setOrderId] = useState(null);
 
   useEffect(() => {
     const status = searchParams.get("status");
     const transactionId = searchParams.get("transactionId");
+    const orderId = searchParams.get("orderId");
 
     setPaymentStatus(status);
-    setTransactionId(transactionId);
+    setOrderId(orderId);
 
     if (status === 'success') {
       confirmPayment(transactionId);
@@ -30,10 +33,10 @@ export default function PaymentCompletePage() {
       if (response.data.status === 200) {
         console.log("Payment confirmed successfully");
         setTimeout(() => {
-          router.push(`/order/details?transactionId=${transactionId}`);
+          router.push(`/order/details?orderId=${response.data.orderId}`);
         }, 3000); 
       } else {
-        console.error("Failed to confirm payment status");
+        console.error(response.data.error);
       }
     } catch (error) {
       console.error("Error confirming payment:", error);
@@ -61,7 +64,7 @@ export default function PaymentCompletePage() {
             Redirecting to your order details in 3 seconds...
           </p>
             <p style={{ marginTop: '20px' }}>If not redirected automatically, 
-              please <a style={{ color: 'red' }} href={`/order/details?transactionId=${transactionId}`}> click here</a>.
+              please <a style={{ color: 'red' }} href={`/order/details?orderId=${orderId}`}> click here</a>.
             </p>              
         </>
       ) : (
