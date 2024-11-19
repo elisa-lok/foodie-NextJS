@@ -13,3 +13,17 @@ export const checkUserLogin = async (token) => {
     throw error;
   }
 };
+
+export const checkAdminLogin = async (token) => {
+  try {
+    const response = await axios.get("/api/admin/auth", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response;
+  } catch (error) {
+    console.error("Error checking admin login:", error);
+    throw error;
+  }
+};

@@ -1,9 +1,47 @@
 "use client";
-import { useState } from "react";
+
+import { useEffect, useState } from "react";
+import { checkAdminLogin } from "@/utils/auth";
+import { useRouter } from "next/navigation";
 import "./dashboard.css";
 
 export default function AdminDashboard() {
+  const router = useRouter();
   const [selectedSection, setSelectedSection] = useState("Overview");
+  const [isLoading, setIsLoading] = useState(true); 
+  const [isAuthenticated, setIsAuthenticated] = useState(true);
+
+  useEffect(() => {
+    const verifyAdminLogin = async () => {
+      const token = localStorage.getItem('admin_token');
+      if (!token) {
+        setIsAuthenticated(false);
+        router.push('/admin/login');
+        return;
+      }
+
+      try {
+        const response = await checkAdminLogin(token);
+        if (response.data.status !== 200) {
+          console.log("Token is invalid, admin is not logged in.");
+          localStorage.removeItem("admin_token");
+          setIsAuthenticated(false);
+          router.push('/admin/login');
+        }
+      } catch (error) {
+        console.error("Error verifying admin login:", error);
+        setIsAuthenticated(false);
+        router.push("/admin/login");
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    
+    verifyAdminLogin();
+  }, [router])
+
+  const token = localStorage.getItem('admin-token');
+  checkAdminLogin(token); 
 
   const renderContent = () => {
     switch (selectedSection) {
@@ -23,6 +61,14 @@ export default function AdminDashboard() {
         return <p>Select an option from the sidebar.</p>;
     }
   };
+
+  if (isLoading) {
+    return <div>Loading...</div>; 
+  }
+
+  if (!isAuthenticated) {
+    return null; 
+  }
 
   return (
     <main className="dashboard-layout">
