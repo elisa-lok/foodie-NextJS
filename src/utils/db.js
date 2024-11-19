@@ -1,16 +1,14 @@
 import mongoose from "mongoose";
 
-const dbConnect = () => {
+const dbConnect = async () => {
   try {
-    const conn = mongoose.connect(`mongodb+srv://elisa:AaAa1234@foodie.cjkez.mongodb.net/foodie`, {
-      useNewUrlParser: true,
-    });
-    console.log(`MongoDB Connected: {conn.connection.host}`);
+    const conn = await mongoose.connect(process.env.MONGODB_URI);
+    console.log(`MongoDB Connected: ${conn.connection.host}`);
     return conn;
   } catch (error) {
-    console.error(error.message);
+    console.error(`Error: ${error.message}`);
     process.exit(1);
   }
-}
+};
 
 export default dbConnect;
