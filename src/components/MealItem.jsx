@@ -22,7 +22,7 @@ export default function MealItem({ meal }) {
     <li className="meal-item">
       <article>
         <Link href={`/meals/${meal.id}`}>
-          <img src={`http://localhost:3000/${meal.image}`} alt={meal.name} />
+          <img src={`/${meal.image}`} alt={meal.name} />
         </Link>
         <div>
           <Link href={`/meals/${id}`}>
