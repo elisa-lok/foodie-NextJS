@@ -6,7 +6,7 @@ import { useDispatch } from "react-redux";
 import { modalActions } from "@/app/store/modal";
 import axios from "axios";
 
-export default function activatePage() {
+export default function ActivatePage() {
   const [status, setStatus] = useState('loading');
   const searchParams = useSearchParams();
   const router = useRouter();
