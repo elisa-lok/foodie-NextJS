@@ -39,7 +39,7 @@ const RegisterModal = () => {
     if (response.data.status === 200) {
       console.log("Registration successful:", response.data);
       setSuccessMessage(
-        "Registration successful! Please check your email to activate your account."
+        response.data.message || "Registration successful. Please login."
       );
 
       setTimeout(() => {
