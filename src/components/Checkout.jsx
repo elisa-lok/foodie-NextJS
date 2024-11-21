@@ -1,7 +1,7 @@
 import Modal from "@/components/UI/Modal";
 import Input from "@/components/UI/Input";
 import Button from "@/components/UI/Button";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { currencyFormatter } from "@/utils/formatter";
 import { modalActions } from "@/app/store/modal";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,6 +9,18 @@ import { saveOrderInfo, clearOrderInfo } from "@/app/store/order";
 import { checkUserLogin } from "@/utils/auth";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+
+const initialOrderInfo = () => {
+  if (typeof window !== "undefined") {
+    const user = JSON.parse(localStorage.getItem("user"));
+    const selectedAddress = localStorage.getItem("selectedAddress");
+    return {
+      email: user?.email || "",
+      address: selectedAddress || "",
+    };
+  }
+  return { email: "", address: "" };
+};
 
 export default function Checkout() {
   const dispatch = useDispatch();
@@ -27,8 +39,14 @@ export default function Checkout() {
   const [selectedStore, setSelectedStore] = useState("");
   const [error, setError] = useState({ email: "", phone: "" });
 
-  const initialEmail = JSON.parse(localStorage.getItem("user"))?.email || "";
-  const initialAddress = localStorage.getItem("selectedAddress") || "";
+  const [initialEmail, setInitialEmail] = useState("");
+  const [initialAddress, setInitialAddress] = useState("");
+
+  useEffect(() => {
+    const { email, address } = initialOrderInfo();
+    setInitialEmail(email);
+    setInitialAddress(address);
+  }, []);
 
   const isValidEmail = (email) => /^\S+@\S+\.\S+$/.test(email);
   const isValidPhone = (phone) =>

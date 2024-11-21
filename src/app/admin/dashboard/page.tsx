@@ -5,43 +5,48 @@ import { checkAdminLogin } from "@/utils/auth";
 import { useRouter } from "next/navigation";
 import "./dashboard.css";
 
+const initialAuthStatus = async () => {
+  if (typeof window !== "undefined") {
+    const token = localStorage.getItem("admin_token");
+    if (!token) {
+      return { isAuthenticated: false, isLoading: false };
+    }
+
+    try {
+      const response = await checkAdminLogin(token);
+      if (response.data.status !== 200) {
+        console.log("Token is invalid, admin is not logged in.");
+        localStorage.removeItem("admin_token");
+        return { isAuthenticated: false, isLoading: false };
+      }
+      return { isAuthenticated: true, isLoading: false };
+    } catch (error) {
+      console.error("Error verifying admin login:", error);
+      return { isAuthenticated: false, isLoading: false };
+    }
+  }
+  return { isAuthenticated: false, isLoading: true }; 
+};
+
 export default function AdminDashboard() {
   const router = useRouter();
   const [selectedSection, setSelectedSection] = useState("Overview");
-  const [isLoading, setIsLoading] = useState(true); 
+  const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(true);
 
   useEffect(() => {
     const verifyAdminLogin = async () => {
-      const token = localStorage.getItem('admin_token');
-      if (!token) {
-        setIsAuthenticated(false);
-        router.push('/admin/login');
-        return;
-      }
+      const { isAuthenticated, isLoading } = await initialAuthStatus();
+      setIsAuthenticated(isAuthenticated);
+      setIsLoading(isLoading);
 
-      try {
-        const response = await checkAdminLogin(token);
-        if (response.data.status !== 200) {
-          console.log("Token is invalid, admin is not logged in.");
-          localStorage.removeItem("admin_token");
-          setIsAuthenticated(false);
-          router.push('/admin/login');
-        }
-      } catch (error) {
-        console.error("Error verifying admin login:", error);
-        setIsAuthenticated(false);
+      if (!isAuthenticated) {
         router.push("/admin/login");
-      } finally {
-        setIsLoading(false);
       }
-    }
-    
-    verifyAdminLogin();
-  }, [router])
+    };
 
-  const token = localStorage.getItem('admin-token');
-  checkAdminLogin(token); 
+    verifyAdminLogin();
+  }, [router]);
 
   const renderContent = () => {
     switch (selectedSection) {
@@ -63,11 +68,11 @@ export default function AdminDashboard() {
   };
 
   if (isLoading) {
-    return <div>Loading...</div>; 
+    return <div>Loading...</div>;
   }
 
   if (!isAuthenticated) {
-    return null; 
+    return null;
   }
 
   return (
@@ -77,45 +82,47 @@ export default function AdminDashboard() {
           <i className="pizza-icon">🍕</i>
           <h3>Level One</h3>
         </div>
-      <nav>
-        <ul>
-          <li
-            className={selectedSection === "Overview" ? "active" : ""}
-            onClick={() => setSelectedSection("Overview")}
-          >
-            Overview
-          </li>
-          <li
-            className={selectedSection === "Users" ? "active" : ""}
-            onClick={() => setSelectedSection("Users")}
-          >
-            Manage Users
-          </li>
-          <li
-            className={selectedSection === "Products" ? "active" : ""}
-            onClick={() => setSelectedSection("Products")}
-          >
-            Products
-          </li>
-          <li
-            className={selectedSection === "Orders" ? "active" : ""}
-            onClick={() => setSelectedSection("Orders")}
-          >
-            Orders
+        <nav>
+          <ul>
+            <li
+              className={selectedSection === "Overview" ? "active" : ""}
+              onClick={() => setSelectedSection("Overview")}
+            >
+              Overview
+            </li>
+            <li
+              className={selectedSection === "Users" ? "active" : ""}
+              onClick={() => setSelectedSection("Users")}
+            >
+              Manage Users
+            </li>
+            <li
+              className={selectedSection === "Products" ? "active" : ""}
+              onClick={() => setSelectedSection("Products")}
+            >
+              Products
+            </li>
+            <li
+              className={selectedSection === "Orders" ? "active" : ""}
+              onClick={() => setSelectedSection("Orders")}
+            >
+              Orders
             </li>
             <li
               className={selectedSection === "Reviews" ? "active" : ""}
               onClick={() => setSelectedSection("Reviews")}
-          >
-            Reviews
+            >
+              Reviews
             </li>
-            <li className={selectedSection === "Settings" ? "active" : ""}
-             onClick={() => setSelectedSection("Settings")}>
-            Settings
-          </li>
-        </ul>
-      </nav>
-    </aside>
+            <li
+              className={selectedSection === "Settings" ? "active" : ""}
+              onClick={() => setSelectedSection("Settings")}
+            >
+              Settings
+            </li>
+          </ul>
+        </nav>
+      </aside>
       <section className="content-area">
         <div className="admin-header">
           <div className="admin-position">admin / {selectedSection}</div>
@@ -123,15 +130,10 @@ export default function AdminDashboard() {
             <div className="avatar">
               <img src="/assets/admin-avatar.png" alt="Admin Avatar" />
             </div>
-          {/* <div className="notifications">
-            <span role="img" aria-label="notifications">
-              🔔
-            </span>
-          </div> */}
           </div>
         </div>
-      {renderContent()}
-    </section>
-  </main>
+        {renderContent()}
+      </section>
+    </main>
   );
 }

@@ -1,6 +1,5 @@
 "use client";
 
-import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { currencyFormatter, formatDate } from "@/utils/formatter"; 
 import axios from 'axios';
@@ -8,17 +7,20 @@ import styles from './details.css';
 import { PAYMENT_STATUSES, ORDER_STATUSES, PAYMENT_METHODS } from '@/constants/payment';
 
 export default function OrderDetailsPage() {
-  const searchParams = useSearchParams();
+  const [orderId, setOrderId] = useState(null);
   const [orderDetails, setOrderDetails] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const orderId = searchParams.get("orderId");
-    if(orderId){
-      fetchOrderDetails(orderId);
+    const params = new URLSearchParams(window.location.search);
+    const orderIdFromUrl = params.get("orderId");
+    setOrderId(orderIdFromUrl);
+
+    if (orderIdFromUrl) {
+      fetchOrderDetails(orderIdFromUrl);
     }
-  }, [searchParams]);
+  }, []);
 
   const fetchOrderDetails = async (orderId) => {
     try {
@@ -52,7 +54,7 @@ export default function OrderDetailsPage() {
     {orderDetails && (
       <div className="order-info-card">
           <h2 className="order-section-title">Order Details</h2>
-        <p className="order-text">Order Number: {orderDetails._id}</p>
+        <p className="order-text">Order Number: {orderId}</p>
         <p className="order-text">Order Recipient: {orderDetails.name}</p>
         <p className="order-text">Email: {orderDetails.email}</p>
         <p className="order-text">Phone Number: {orderDetails.phone}</p>

@@ -1,12 +1,17 @@
-"use client";
-
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
 export default function Modal({ children, open, onClose, className }) {
-  const dialog = useRef();
+  const dialog = useRef(null);
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isClient || !dialog.current) return;
+
     const modal = dialog.current;
 
     const handleCancel = (event) => {
@@ -24,13 +29,15 @@ export default function Modal({ children, open, onClose, className }) {
     }
 
     return () => {
-      if (modal.open) {
+      if (modal?.open) {
         modal.close();
       }
-      modal.removeEventListener("cancel", handleCancel);
+      modal?.removeEventListener("cancel", handleCancel);
       document.body.style.overflow = "";
     };
-  }, [open, onClose]);
+  }, [open, onClose, isClient]);
+
+  if (!isClient) return null;
 
   return createPortal(
     <dialog ref={dialog} className={`modal ${className}`}>

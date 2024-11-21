@@ -1,17 +1,16 @@
 "use client";
 
-import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import axios from 'axios'; 
 import { useRouter } from 'next/navigation';
 
 export default function PaymentCompletePage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const [paymentStatus, setPaymentStatus] = useState(null);
   const [orderId, setOrderId] = useState(null);
 
   useEffect(() => {
+    const searchParams = new URLSearchParams(window.location.search);
     const status = searchParams.get("status");
     const transactionId = searchParams.get("transactionId");
     const orderId = searchParams.get("orderId");

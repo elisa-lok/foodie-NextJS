@@ -1,20 +1,20 @@
 'use client';
 
-import { useSearchParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { use, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { modalActions } from "@/app/store/modal";
 import axios from "axios";
 
 export default function ActivatePage() {
   const [status, setStatus] = useState('loading');
-  const searchParams = useSearchParams();
   const router = useRouter();
   const dispatch = useDispatch();
 
   useEffect(() => {
     const activateAccount = async () => {
-      const token = searchParams.get('token');
+      const params = new URLSearchParams(window.location.search);
+      const token = params.get("token");
       if (!token) {
         setStatus('error');
         return;

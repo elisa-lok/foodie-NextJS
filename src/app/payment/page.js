@@ -1,18 +1,15 @@
 "use client"; 
 
-import { useSearchParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import Button from "@/components/UI/Button";
 import Modal from "@/components/UI/Modal";
 import { currencyFormatter } from "@/utils/formatter";
-import { loadStripe } from "@stripe/stripe-js";
-import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import axios from "axios";
 
 export default function Payment() {
-  const params = useSearchParams();
-  const orderId = params.get('orderId');
   const router = useRouter();
+  const [orderId, setOrderId] = useState(null);
   const [orderInfo, setOrderInfo] = useState(null);
   const [showCardModal, setShowCardModal] = useState(false);
 
@@ -143,10 +140,14 @@ export default function Payment() {
   };
 
   useEffect(() => {
-    if (!orderId) {
+    const params = new URLSearchParams(window.location.search);
+    const orderIdFromUrl = params.get("orderId");
+    if (!orderIdFromUrl) {
       router.push("/"); 
       return;
     }
+
+    setOrderId(orderIdFromUrl);
 
     const fetchOrderData = async () => {
       try {
