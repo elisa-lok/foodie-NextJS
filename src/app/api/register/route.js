@@ -2,8 +2,8 @@ import dbConnect from '@/utils/db';
 import User from '@/app/models/User';
 import bcrypt from 'bcrypt';
 import { NextResponse } from 'next/server';
-import { sendActivationEmail } from '@/utils/email';
-import { createActivationLink } from '@/utils/token';
+//import { sendActivationEmail } from '@/utils/email';
+//import { createActivationLink } from '@/utils/token';
 
 export async function POST(req) {
   try {
@@ -34,7 +34,8 @@ export async function POST(req) {
     const newUser = new User({
       email,
       password: hashedPassword,
-      status: 'inactive',
+      //status: 'inactive',
+      status: 'active',
       createTime: new Date(),
       lastLogin: null,
       nickname: null,
@@ -43,16 +44,22 @@ export async function POST(req) {
 
     await newUser.save();
 
-    const activationLink = createActivationLink(newUser._id);
-    await sendActivationEmail(email, activationLink);
+    // const activationLink = createActivationLink(newUser._id);
+    // await sendActivationEmail(email, activationLink);
+
+    // return NextResponse.json(
+    //   {
+    //     status: 200,
+    //     message: "User registered successfully, please check your email to activate your account.",
+    //   }
+    // );
 
     return NextResponse.json(
       {
         status: 200,
-        message: "User registered successfully, please check your email to activate your account.",
+        message: "User registered successfully, please login your account.",
       }
     );
-
 
   }catch (error) {
     return NextResponse.json(
