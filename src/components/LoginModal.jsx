@@ -94,7 +94,7 @@ const LoginModal = () => {
         </div>
       </form>
       <p className="text-center mt-4">
-        Haven't registered yet?{" "}
+        Haven&apos;t registered yet?
         <Button
           textButton
           onClick={handleOpenRegister}
