@@ -15,7 +15,7 @@ import { checkUserLogin } from "@/utils/auth";
 const Header = () => {
   const dispatch = useDispatch();
   const cartQuantity = useSelector((state) => state.cart.totalQuantity);
-  const router = useRouter();
+  const router = useRouter();  
 
   const handleClickAccount = async () => {
     try {

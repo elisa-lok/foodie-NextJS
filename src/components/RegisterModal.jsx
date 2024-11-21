@@ -10,16 +10,16 @@ const RegisterModal = () => {
   const isRegisterModalOpen = useSelector(
     (state) => state.modal.isRegisterModalOpen
   );
-
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
   const handleSubmitForm = async (e) => {
     e.preventDefault();
     setError("");
+
+    const email = e.target.email.value;
+    const password = e.target.password.value;
+    const confirmPassword = e.target["confirm-password"].value;
 
     if (!email || !password || !confirmPassword) {
       setError("All fields are required");
@@ -68,23 +68,14 @@ const RegisterModal = () => {
         <form className="login-form" onSubmit={handleSubmitForm}>
           <div className="input-group">
             <label htmlFor="email">Email:</label>
-            <input
-              type="email"
-              name="email"
-              value={email}
-              className="login-input"
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
+            <input type="email" name="email" className="login-input" required />
           </div>
           <div className="input-group">
             <label htmlFor="password">Password:</label>
             <input
               type="password"
               name="password"
-              value={password}
               className="login-input"
-              onChange={(e) => setPassword(e.target.value)}
               required
             />
           </div>
@@ -93,9 +84,7 @@ const RegisterModal = () => {
             <input
               type="password"
               name="confirm-password"
-              value={confirmPassword}
               className="login-input"
-              onChange={(e) => setConfirmPassword(e.target.value)}
               required
             />
           </div>

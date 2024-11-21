@@ -11,8 +11,6 @@ const LoginModal = () => {
   const isLoginModalOpen = useSelector((state) => state.modal.isLoginModalOpen);
   const savedOrderInfo = useSelector((state) => state.order.orderInfo);
   const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
   const handleOpenRegister = () => {
@@ -23,6 +21,9 @@ const LoginModal = () => {
   const handleLoginForm = async (e) => {
     e.preventDefault();
     setError("");
+
+    const email = e.target.email.value;
+    const password = e.target.password.value;
 
     if (!email || !password) {
       setError("All fields are required");
@@ -61,23 +62,14 @@ const LoginModal = () => {
       <form className="login-form" onSubmit={handleLoginForm}>
         <div className="input-group">
           <label htmlFor="email">Email:</label>
-          <input
-            type="email"
-            name="email"
-            value={email}
-            className="login-input"
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
+          <input type="email" name="email" className="login-input" required />
         </div>
         <div className="input-group">
           <label htmlFor="password">Password:</label>
           <input
             type="password"
             name="password"
-            value={password}
             className="login-input"
-            onChange={(e) => setPassword(e.target.value)}
             required
           />
         </div>
