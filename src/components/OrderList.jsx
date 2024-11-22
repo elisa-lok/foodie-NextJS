@@ -33,7 +33,7 @@ const OrderList = ({ userId }) => {
       if (response.data.status === 200) {
         setOrders(response.data.orders);
       } else {
-        setError("Failed to load orders. Please try again.");
+        setError(response.data.error || "Failed to fetch orders.");
       }
     } catch (err) {
       console.error("Error fetching orders:", err);
