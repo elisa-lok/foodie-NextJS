@@ -14,9 +14,11 @@ const initialOrderInfo = () => {
   if (typeof window !== "undefined") {
     const user = JSON.parse(localStorage.getItem("user"));
     const selectedAddress = localStorage.getItem("selectedAddress");
+    const selectedStore = localStorage.getItem("selectedStore");
     return {
       email: user?.email || "",
       address: selectedAddress || "",
+      store: selectedStore || "",
     };
   }
   return { email: "", address: "" };
@@ -36,16 +38,17 @@ export default function Checkout() {
 
   const savedOrderInfo = useSelector((state) => state.order.orderInfo);
   const [pickupMethod, setPickupMethod] = useState("0"); // 0: Delivery, 1: Pickup
-  const [selectedStore, setSelectedStore] = useState("");
   const [error, setError] = useState({ email: "", phone: "" });
 
   const [initialEmail, setInitialEmail] = useState("");
   const [initialAddress, setInitialAddress] = useState("");
+  const [initialStore, setInitialStore] = useState("");
 
   useEffect(() => {
-    const { email, address } = initialOrderInfo();
+    const { email, address, store } = initialOrderInfo();
     setInitialEmail(email);
     setInitialAddress(address);
+    setInitialStore(store);
   }, []);
 
   const isValidEmail = (email) => /^\S+@\S+\.\S+$/.test(email);
@@ -84,9 +87,9 @@ export default function Checkout() {
       email: email,
       address:
         pickupMethod === "1"
-          ? selectedStore
+          ? initialStore
           : event.target.address.value || initialAddress,
-      instructions: event.target.instructions.value,
+      instructions: event.target.instructions?.value,
       cartItems,
       totalPrice,
       pickupMethod: pickupMethod,
@@ -186,8 +189,8 @@ export default function Checkout() {
             <select
               id="store"
               name="store"
-              value={selectedStore}
-              onChange={(e) => setSelectedStore(e.target.value)}
+              value={initialStore}
+              onChange={(e) => setInitialStore(e.target.value)}
               required
             >
               <option value="">Select a store</option>

@@ -3,6 +3,7 @@
 import React, { useState, memo, useEffect, useRef } from "react";
 import Modal from "@/components/UI/Modal";
 import Button from "@/components/UI/Button";
+import { modalActions } from "@/app/store/modal";
 
 const DeliveryPickupModal = () => {
   const [isDeliveryPickupModalOpen, setIsDeliveryPickupModalOpen] =
@@ -10,6 +11,7 @@ const DeliveryPickupModal = () => {
   const [selectedOption, setSelectedOption] = useState("Delivery");
   const [suggestions, setSuggestions] = useState([]);
   const [inputValue, setInputValue] = useState("");
+  const [selectedStore, setSelectedStore] = useState("");
   const autocompleteRef = useRef(null);
   const inputRef = useRef(null);
   const [googleMapsLoaded, setGoogleMapsLoaded] = useState(false);
@@ -189,6 +191,19 @@ const DeliveryPickupModal = () => {
     };
   }, [isDeliveryPickupModalOpen]);
 
+  const handleStoreChange = (e) => {
+    setSelectedStore(e.target.value);
+  };
+
+  const handleSubmit = () => {
+    if (selectedStore) {
+      alert(`Selected store: ${selectedStore}`);
+      localStorage.setItem("selectedStore", selectedStore);
+    } else {
+      alert("Please select a store before submitting.");
+    }
+  };
+
   return (
     <Modal
       className="pickup"
@@ -240,96 +255,137 @@ const DeliveryPickupModal = () => {
         </Button>
       </div>
 
-      <div>
-        <p>Search for a place here:</p>
-        <div style={{ width: "100%", marginTop: "10px", position: "relative" }}>
-          <input
-            ref={inputRef}
-            type="text"
-            value={inputValue}
-            onChange={handleInputChange}
-            placeholder="Enter a location"
-            style={{
-              width: "100%",
-              height: "40px",
-              padding: "10px",
-              fontSize: "16px",
-              border: "1px solid #ccc",
-              borderRadius: "4px",
-            }}
-          />
-          {inputValue && (
-            <button
-              onClick={() => {
-                setInputValue("");
-                setSuggestions([]);
-              }}
-              style={{
-                position: "absolute",
-                right: "10px",
-                top: "50%",
-                transform: "translateY(-50%)",
-                border: "none",
-                background: "none",
-                cursor: "pointer",
-                color: "#000",
-                fontSize: "18px",
-              }}
+      {selectedOption === "Delivery" && (
+        <>
+          <div>
+            <p>Search for a place here:</p>
+            <div
+              style={{ width: "100%", marginTop: "10px", position: "relative" }}
             >
-              &times;
-            </button>
-          )}
-
-          {suggestions.length > 0 && (
-            <ul
-              style={{
-                listStyle: "none",
-                padding: "0",
-                margin: "0",
-                border: "1px solid #ccc",
-                borderRadius: "4px",
-                maxHeight: "200px",
-                overflowY: "auto",
-                position: "absolute",
-                top: "100%",
-                left: "0",
-                right: "0",
-                backgroundColor: "white",
-                zIndex: "1000",
-                boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-              }}
-            >
-              {suggestions.map((suggestion, index) => (
-                <li
-                  key={index}
-                  onClick={() => handleSelectAddress(suggestion.description)}
+              <input
+                ref={inputRef}
+                type="text"
+                value={inputValue}
+                onChange={handleInputChange}
+                placeholder="Enter a location"
+                style={{
+                  width: "100%",
+                  height: "40px",
+                  padding: "10px",
+                  fontSize: "16px",
+                  border: "1px solid #ccc",
+                  borderRadius: "4px",
+                }}
+              />
+              {inputValue && (
+                <button
+                  onClick={() => {
+                    setInputValue("");
+                    setSuggestions([]);
+                  }}
                   style={{
-                    padding: "10px",
+                    position: "absolute",
+                    right: "10px",
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                    border: "none",
+                    background: "none",
                     cursor: "pointer",
-                    borderBottom:
-                      index < suggestions.length - 1
-                        ? "1px solid #eee"
-                        : "none",
-                    backgroundColor: "#fff",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = "#f0f0f0";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = "#fff";
+                    color: "#000",
+                    fontSize: "18px",
                   }}
                 >
-                  {suggestion.description}
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-      </div>
+                  &times;
+                </button>
+              )}
 
-      <Button onClick={handleCurrentLocation} style={{ marginTop: "20px" }}>
-        Use My Current Location
-      </Button>
+              {suggestions.length > 0 && (
+                <ul
+                  style={{
+                    listStyle: "none",
+                    padding: "0",
+                    margin: "0",
+                    border: "1px solid #ccc",
+                    borderRadius: "4px",
+                    maxHeight: "200px",
+                    overflowY: "auto",
+                    position: "absolute",
+                    top: "100%",
+                    left: "0",
+                    right: "0",
+                    backgroundColor: "white",
+                    zIndex: "1000",
+                    boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+                  }}
+                >
+                  {suggestions.map((suggestion, index) => (
+                    <li
+                      key={index}
+                      onClick={() =>
+                        handleSelectAddress(suggestion.description)
+                      }
+                      style={{
+                        padding: "10px",
+                        cursor: "pointer",
+                        borderBottom:
+                          index < suggestions.length - 1
+                            ? "1px solid #eee"
+                            : "none",
+                        backgroundColor: "#fff",
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = "#f0f0f0";
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = "#fff";
+                      }}
+                    >
+                      {suggestion.description}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </div>
+          <Button onClick={handleCurrentLocation} style={{ marginTop: "20px" }}>
+            Use My Current Location
+          </Button>
+        </>
+      )}
+
+      {selectedOption === "Pickup" && (
+        <>
+          <div style={{ marginTop: "20px" }}>
+            <select
+              value={selectedStore}
+              onChange={handleStoreChange}
+              style={{
+                width: "100%",
+                padding: "10px",
+                fontSize: "16px",
+                border: "1px solid #ccc",
+                borderRadius: "4px",
+              }}
+            >
+              <option value="">Select Store</option>
+              <option value="Store 1">Store 1</option>
+              <option value="Store 2">Store 2</option>
+              <option value="Store 3">Store 3</option>
+            </select>
+          </div>
+
+          <Button
+            onClick={handleSubmit}
+            style={{
+              marginTop: "20px",
+              background: "#ffc404",
+              color: "#000",
+            }}
+          >
+            Submit
+          </Button>
+        </>
+      )}
     </Modal>
   );
 };

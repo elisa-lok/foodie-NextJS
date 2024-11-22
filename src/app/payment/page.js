@@ -142,8 +142,9 @@ export default function Payment() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const orderIdFromUrl = params.get("orderId");
+    console.log("orderIdFromUrl", orderIdFromUrl);
     if (!orderIdFromUrl) {
-      router.push("/"); 
+      //router.push("/"); 
       return;
     }
 
@@ -153,7 +154,7 @@ export default function Payment() {
       try {
         const orderResponse = await axios.get(`/api/order/${orderId}`);
         if (orderResponse.data.status !== 200) {
-          router.push("/");
+          //router.push("/");
           return;
         }
         setOrderInfo(orderResponse.data.order);

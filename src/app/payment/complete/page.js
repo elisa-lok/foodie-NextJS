@@ -21,7 +21,7 @@ export default function PaymentCompletePage() {
     if (status === 'success') {
       confirmPayment(transactionId);
     }
-  }, [searchParams]);
+  }, []);
 
   const confirmPayment = async (transactionId) => {
     try {
