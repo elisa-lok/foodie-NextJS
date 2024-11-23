@@ -80,7 +80,7 @@ export default function AdminDashboard() {
       <aside className="sidebar">
         <div className="logo">
           <i className="pizza-icon">🍕</i>
-          <h3>Level One</h3>
+          <h3>Level One Pizza</h3>
         </div>
         <nav>
           <ul>
