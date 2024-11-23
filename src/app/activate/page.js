@@ -32,7 +32,7 @@ export default function ActivatePage() {
       }
     }
     activateAccount();
-  }, [searchParams]);
+  }, []);
 
   return (
     <div className="activation-page">

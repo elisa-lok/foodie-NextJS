@@ -1,18 +1,17 @@
 import nodemailer from 'nodemailer';
 
 export const sendActivationEmail = async (email, activationLink) => {
-    
     const transporter = nodemailer.createTransport({
-      host: 'smtp.mailtrap.io',
-      port: 2525,
+      host: 'smtp.qq.com',
+      port: 465,
       auth: {
-        user: process.env.MAILTRAP_USER,
-        pass: process.env.MAILTRAP_PASS,
+        user: process.env.MAILQQ_USER,
+        pass: process.env.MAILQQ_PASS,
       },
     });
 
     const mailOptions = {
-      from: 'no-reply@example.com',
+      from: `"No Reply - Level One Pizza" <${process.env.MAILQQ_USER}>`,
       to: email,
       subject: 'Activate Your Account',
       html: `
@@ -26,6 +25,5 @@ export const sendActivationEmail = async (email, activationLink) => {
       console.log('Activation email sent successfully.');
     } catch (error) {
       console.error('Error sending activation email:', error);
-      throw new Error('Email could not be sent.');
     }
 }
