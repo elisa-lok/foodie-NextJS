@@ -42,8 +42,8 @@ const UserList = () => {
       {error && <p className="error-message">{error}</p>}
       <ul>
         {users.map((user) => (
-          <li key={user.id}>
-            <strong>{user.name}</strong> - {user.email}
+          <li key={user._id}>
+            <strong>{user.nick_name}</strong> - {user.email}
           </li>
         ))}
       </ul>
