@@ -6,7 +6,7 @@ import {
   ORDER_STATUSES,
 } from "@/constants/payment";
 import Pagination from "@/components/UI/Pagination";
-import Modal from "@/components/UI/Modal";
+import { currencyFormatter, formatDate } from "@/utils/formatter"; 
 
 const OrderList = () => {
   const [orders, setOrders] = useState([]);
@@ -15,6 +15,7 @@ const OrderList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const token = localStorage.getItem("admin_token");
   const ordersPerPage = 10;
 
   useEffect(() => {
@@ -22,8 +23,6 @@ const OrderList = () => {
   }, []);
 
   const fetchOrders = async () => {
-    const token = localStorage.getItem("admin_token");
-
     try {
       setLoading(true);
       const response = await axios.get("/api/orders", {
@@ -45,6 +44,30 @@ const OrderList = () => {
     }
   };
 
+  const fetchOrderDetails = async (orderId) => {
+    try {
+      setLoading(true);
+      const response = await axios.get(`/api/order/${orderId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.data.status === 200) {
+        console.log(response.data.order);
+        setSelectedOrder(response.data.order);
+        setIsModalOpen(true);
+      } else {
+        setError(response.data.error || "Failed to fetch order details.");
+      }
+    } catch (err) {
+      console.error("Error fetching order details:", err);
+      setError("An error occurred while fetching order details.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const indexOfLastOrder = currentPage * ordersPerPage;
   const indexOfFirstOrder = indexOfLastOrder - ordersPerPage;
   const currentOrders = orders.slice(indexOfFirstOrder, indexOfLastOrder);
@@ -53,10 +76,9 @@ const OrderList = () => {
     setCurrentPage(pageNumber);
   };
 
-  const handleDetailsClick = (order) => {
-    alert(1111);
-    setSelectedOrder(order);
-    setIsModalOpen(true);
+  const handleDetailsClick = (orderId) => {
+    alert(orderId);
+    fetchOrderDetails(orderId);
   };
 
   const handleCloseModal = () => {
@@ -92,7 +114,7 @@ const OrderList = () => {
                   <td>{PAYMENT_METHODS[order.paymentMethod]}</td>
                   <td>{new Date(order.createdAt).toLocaleString()}</td>
                   <td>
-                    <button onClick={() => handleDetailsClick(order)}>
+                    <button onClick={() => handleDetailsClick(order._id)}>
                       Details
                     </button>
                   </td>
@@ -108,36 +130,47 @@ const OrderList = () => {
         </>
       )}
 
-      {isModalOpen && (
-        <Modal onClose={handleCloseModal}>
-          <h2>Order Details</h2>
-          {selectedOrder && (
-            <div>
-              <p>
-                <strong>Order ID:</strong> {selectedOrder._id}
-              </p>
-              <p>
-                <strong>Buyer:</strong> {selectedOrder.name}
-              </p>
-              <p>
-                <strong>Order Status:</strong>{" "}
-                {ORDER_STATUSES[selectedOrder.orderStatus]}
-              </p>
-              <p>
-                <strong>Payment Status:</strong>{" "}
-                {PAYMENT_STATUSES[selectedOrder.paymentStatus]}
-              </p>
-              <p>
-                <strong>Payment Method:</strong>{" "}
-                {PAYMENT_METHODS[selectedOrder.paymentMethod]}
-              </p>
-              <p>
-                <strong>Order Date:</strong>{" "}
-                {new Date(selectedOrder.createdAt).toLocaleString()}
-              </p>
-            </div>
-          )}
-        </Modal>
+      {isModalOpen && selectedOrder && (
+        <div className="modal-backdrop">
+          <div className="modal-content">
+            <button className="close-button" onClick={handleCloseModal}>
+              Close
+            </button>
+            <h2>Order Details</h2>
+            <p>Order Number: {selectedOrder._id}</p>
+            <p>Order Recipient: {selectedOrder.name}</p>
+            <p>Email: {selectedOrder.email}</p>
+            <p>Phone Number: {selectedOrder.phone}</p>
+            <p>
+              Order Handle:{" "}
+              {selectedOrder.pickupMethod === 0 ? "Delivery" : "Pickup"}
+            </p>
+            <p>Address: {selectedOrder.address}</p>
+            <p>Order Status: {ORDER_STATUSES[selectedOrder.orderStatus]}</p>
+            <p>
+              Payment Status: {PAYMENT_STATUSES[selectedOrder.paymentStatus]}
+            </p>
+            <p>
+              Payment Method: {PAYMENT_METHODS[selectedOrder.paymentMethod]}
+            </p>
+            <p>Created At: {formatDate(selectedOrder.createdAt)}</p>
+
+            <h2>Items</h2>
+            <ul>
+              {selectedOrder.cartItems.map((item) => (
+                <li key={item.id} className="order-item">
+                  <span className="order-item-name">{item.name}</span>
+                  <span className="order-item-price">
+                    {currencyFormatter.format(item.price)} x {item.quantity}
+                  </span>
+                </li>
+              ))}
+            </ul>
+            <p className="order-total">
+              Total Amount: {currencyFormatter.format(selectedOrder.totalPrice)}
+            </p>
+          </div>
+        </div>
       )}
     </div>
   );
