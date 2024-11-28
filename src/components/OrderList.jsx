@@ -7,6 +7,7 @@ import {
   PAYMENT_METHODS,
   ORDER_STATUSES,
 } from "@/constants/payment";
+import Pagination from "@/components/UI/Pagination";
 
 const OrderList = ({ userId }) => {
   const [orders, setOrders] = useState([]);
@@ -151,32 +152,6 @@ const OrderList = ({ userId }) => {
           />
         </>
       )}
-    </div>
-  );
-};
-
-const Pagination = ({ currentPage, totalPages, onPageChange }) => {
-  const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
-
-  return (
-    <div style={{ textAlign: "center", margin: "20px 0" }}>
-      {pageNumbers.map((number) => (
-        <button
-          key={number}
-          onClick={() => onPageChange(number)}
-          style={{
-            margin: "0 5px",
-            padding: "8px 16px",
-            backgroundColor: currentPage === number ? "#4caf50" : "#fff",
-            color: currentPage === number ? "#fff" : "#000",
-            border: "1px solid #ccc",
-            borderRadius: "4px",
-            cursor: "pointer",
-          }}
-        >
-          {number}
-        </button>
-      ))}
     </div>
   );
 };

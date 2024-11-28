@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import { checkAdminLogin } from "@/utils/auth";
 import { useRouter } from "next/navigation";
-import UserList from "@/components/UserList";
+import UserList from "@/components/admin/UserList";
+import OrderList from "@/components/admin/OrderList";
 import "./dashboard.css";
 
 const initialAuthStatus = async () => {
@@ -58,7 +59,7 @@ export default function AdminDashboard() {
       case "Products":
         return <p>View products here.</p>;
       case "Orders":
-        return <p>View orders here.</p>;
+        return <OrderList />;
       case "Reviews":
         return <p>Manage reviews here.</p>;
       case "Settings":
