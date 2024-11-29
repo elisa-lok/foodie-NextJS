@@ -25,7 +25,7 @@ const OrderList = () => {
   const fetchOrders = async () => {
     try {
       setLoading(true);
-      const response = await axios.get("/api/admin/order", {
+      const response = await axios.get("/api/admin/orders", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -47,7 +47,7 @@ const OrderList = () => {
   const fetchOrderDetails = async (orderId) => {
     try {
       setLoading(true);
-      const response = await axios.get(`/api/admin/order/${orderId}`, {
+      const response = await axios.get(`/api/admin/orders/${orderId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -114,7 +114,10 @@ const OrderList = () => {
                   <td>{PAYMENT_METHODS[order.paymentMethod]}</td>
                   <td>{new Date(order.createdAt).toLocaleString()}</td>
                   <td>
-                    <button onClick={() => handleDetailsClick(order._id)} className="action-button">
+                    <button
+                      onClick={() => handleDetailsClick(order._id)}
+                      className="action-button"
+                    >
                       Details
                     </button>
                   </td>
@@ -130,75 +133,80 @@ const OrderList = () => {
         </>
       )}
 
-{isModalOpen && selectedOrder && (
-  <div className="modal-backdrop">
-    <div className="modal-content">
-      <button className="close-button" onClick={handleCloseModal}>
-        &times;
-      </button>
-      <div className="modal-header">
-        <h2 className="modal-title">Order Details</h2>
-      </div>
-      <div className="modal-body">
-        <div className="order-section">
-          <p className="order-detail">
-            <span className="order-label">Order Number:</span> {selectedOrder._id}
-          </p>
-          <p className="order-detail">
-            <span className="order-label">Recipient:</span> {selectedOrder.name}
-          </p>
-          <p className="order-detail">
-            <span className="order-label">Email:</span> {selectedOrder.email}
-          </p>
-          <p className="order-detail">
-            <span className="order-label">Phone:</span> {selectedOrder.phone}
-          </p>
-          <p className="order-detail">
-            <span className="order-label">Order Type:</span>{" "}
-            {selectedOrder.pickupMethod === 0 ? "Delivery" : "Pickup"}
-          </p>
-          <p className="order-detail">
-            <span className="order-label">Address:</span> {selectedOrder.address}
-          </p>
-          <p className="order-detail">
-            <span className="order-label">Order Status:</span>{" "}
-            {ORDER_STATUSES[selectedOrder.orderStatus]}
-          </p>
-          <p className="order-detail">
-            <span className="order-label">Payment Status:</span>{" "}
-            {PAYMENT_STATUSES[selectedOrder.paymentStatus]}
-          </p>
-          <p className="order-detail">
-            <span className="order-label">Payment Method:</span>{" "}
-            {PAYMENT_METHODS[selectedOrder.paymentMethod]}
-          </p>
-          <p className="order-detail">
-            <span className="order-label">Created At:</span>{" "}
-            {formatDate(selectedOrder.createdAt)}
-          </p>
+      {isModalOpen && selectedOrder && (
+        <div className="modal-backdrop">
+          <div className="modal-content">
+            <button className="close-button" onClick={handleCloseModal}>
+              &times;
+            </button>
+            <div className="modal-header">
+              <h2 className="modal-title">Order Details</h2>
+            </div>
+            <div className="modal-body">
+              <div className="order-section">
+                <p className="order-detail">
+                  <span className="order-label">Order Number:</span>{" "}
+                  {selectedOrder._id}
+                </p>
+                <p className="order-detail">
+                  <span className="order-label">Recipient:</span>{" "}
+                  {selectedOrder.name}
+                </p>
+                <p className="order-detail">
+                  <span className="order-label">Email:</span>{" "}
+                  {selectedOrder.email}
+                </p>
+                <p className="order-detail">
+                  <span className="order-label">Phone:</span>{" "}
+                  {selectedOrder.phone}
+                </p>
+                <p className="order-detail">
+                  <span className="order-label">Order Type:</span>{" "}
+                  {selectedOrder.pickupMethod === 0 ? "Delivery" : "Pickup"}
+                </p>
+                <p className="order-detail">
+                  <span className="order-label">Address:</span>{" "}
+                  {selectedOrder.address}
+                </p>
+                <p className="order-detail">
+                  <span className="order-label">Order Status:</span>{" "}
+                  {ORDER_STATUSES[selectedOrder.orderStatus]}
+                </p>
+                <p className="order-detail">
+                  <span className="order-label">Payment Status:</span>{" "}
+                  {PAYMENT_STATUSES[selectedOrder.paymentStatus]}
+                </p>
+                <p className="order-detail">
+                  <span className="order-label">Payment Method:</span>{" "}
+                  {PAYMENT_METHODS[selectedOrder.paymentMethod]}
+                </p>
+                <p className="order-detail">
+                  <span className="order-label">Created At:</span>{" "}
+                  {formatDate(selectedOrder.createdAt)}
+                </p>
+              </div>
+              <div className="order-items-section">
+                <h3 className="section-title">Items</h3>
+                <ul className="order-items-list">
+                  {selectedOrder.cartItems.map((item) => (
+                    <li key={item.id} className="order-item">
+                      <span className="order-item-name">{item.name}</span>
+                      <span className="order-item-price">
+                        {currencyFormatter.format(item.price)} x {item.quantity}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <p className="order-total">
+                <span className="order-label">Total Amount:</span>{" "}
+                {currencyFormatter.format(selectedOrder.totalPrice)}
+              </p>
+            </div>
+          </div>
         </div>
-        <div className="order-items-section">
-          <h3 className="section-title">Items</h3>
-          <ul className="order-items-list">
-            {selectedOrder.cartItems.map((item) => (
-              <li key={item.id} className="order-item">
-                <span className="order-item-name">{item.name}</span>
-                <span className="order-item-price">
-                  {currencyFormatter.format(item.price)} x {item.quantity}
-                </span>
-              </li>
-            ))}
-          </ul>
-        </div>
-        <p className="order-total">
-          <span className="order-label">Total Amount:</span>{" "}
-          {currencyFormatter.format(selectedOrder.totalPrice)}
-        </p>
-      </div>
+      )}
     </div>
-  </div>
-)}
-</div>
   );
 };
 

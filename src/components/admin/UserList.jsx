@@ -1,6 +1,5 @@
-import { useState } from "react";
-import { useEffect } from "react";
 import axios from "axios";
+import { useEffect, useState } from "react";
 import Pagination from "@/components/UI/Pagination";
 
 const UserList = () => {
@@ -19,7 +18,7 @@ const UserList = () => {
 
     try {
       setLoading(true);
-      const response = await axios.get("/api/users", {
+      const response = await axios.get("/api/admin/users", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -46,6 +45,34 @@ const UserList = () => {
     setCurrentPage(pageNumber);
   };
 
+  const handleOpenConfirmModal = (userId, newStatus) => {
+    const token = localStorage.getItem("admin_token");
+
+    if (window.confirm(`Are you sure you want to set this user to ${newStatus}?`)) {
+      axios
+        .put(
+          `/api/admin/users/${userId}`,
+          { status: newStatus },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .then((response) => {
+          if (response.data.status === 200) {
+            fetchUsers();
+          } else {
+            setError(response.data.error || "Failed to update user status.");
+          }
+        })
+        .catch((err) => {
+          console.error("Error updating user status:", err);
+          setError("An error occurred while updating user status.");
+        });
+    }
+  };
+
   return (
     <div className="user-list">
       {loading && <p>Loading...</p>}
@@ -61,7 +88,7 @@ const UserList = () => {
                 <th>Status</th>
                 <th>Created At</th>
                 <th>Last Login</th>
-                <th>Update</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -85,10 +112,15 @@ const UserList = () => {
                   )}
                   <td>
                     <button
-                      onClick={() => handleUpdate(user._id)}
                       className="action-button"
+                      onClick={() =>
+                        handleOpenConfirmModal(
+                          user._id,
+                          user.status === "inactive" ? "active" : "inactive"
+                        )
+                      }
                     >
-                      Update
+                      Set {user.status === "inactive" ? "Active" : "Inactive"}
                     </button>
                   </td>
                 </tr>

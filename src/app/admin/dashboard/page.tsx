@@ -5,6 +5,7 @@ import { checkAdminLogin } from "@/utils/auth";
 import { useRouter } from "next/navigation";
 import UserList from "@/components/admin/UserList";
 import OrderList from "@/components/admin/OrderList";
+import ProductList from "@/components/admin/ProductList";
 import "./dashboard.css";
 
 const initialAuthStatus = async () => {
@@ -57,7 +58,7 @@ export default function AdminDashboard() {
       case "Users":
         return <UserList />;
       case "Products":
-        return <p>View products here.</p>;
+        return <ProductList />;
       case "Orders":
         return <OrderList />;
       case "Reviews":
