@@ -84,7 +84,10 @@ const UserList = () => {
                     <td>Never logged in</td>
                   )}
                   <td>
-                    <button onClick={() => handleUpdate(user._id)}>
+                    <button
+                      onClick={() => handleUpdate(user._id)}
+                      className="action-button"
+                    >
                       Update
                     </button>
                   </td>
