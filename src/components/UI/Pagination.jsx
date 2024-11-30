@@ -10,7 +10,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
           style={{
             margin: "0 5px",
             padding: "8px 16px",
-            backgroundColor: currentPage === number ? "#4caf50" : "#fff",
+            backgroundColor: currentPage === number ? "#007bff" : "#fff",
             color: currentPage === number ? "#fff" : "#000",
             border: "1px solid #ccc",
             borderRadius: "4px",
