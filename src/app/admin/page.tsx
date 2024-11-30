@@ -16,7 +16,7 @@ export default function Home() {
         return;
       }
 
-      const response = await checkAdminLogin(token);
+      const response = await checkAdminLogin(localStorage.getItem("admin_token"));
       if (response.data.status !== 200) {
         localStorage.removeItem("admin_token");
         router.replace("/admin/login");

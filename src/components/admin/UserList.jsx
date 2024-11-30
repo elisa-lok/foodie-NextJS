@@ -1,6 +1,8 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import Pagination from "@/components/UI/Pagination";
+import { useRouter } from "next/navigation";
+import { checkAdminLogin } from "@/utils/auth";
 
 const UserList = () => {
   const [users, setUsers] = useState([]);
@@ -9,12 +11,31 @@ const UserList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const usersPerPage = 10;
 
-  useEffect(() => {
-    fetchUsers();
-  }, []);
+  const router = useRouter();
 
-  const fetchUsers = async () => {
-    const token = localStorage.getItem("admin_token");
+  useEffect(() => {
+    const initializeData = async () => {
+      const token = localStorage.getItem("admin_token");
+
+      if (!token) {
+        router.replace("/admin/login");
+        return;
+      }
+
+      const response = await checkAdminLogin(token);
+      if (response.data.status !== 200) {
+        localStorage.removeItem("admin_token");
+        router.replace("/admin/login");
+        return;
+      }
+
+      await fetchUsers(token);
+    };
+
+    initializeData();
+  }, [router]);
+
+  const fetchUsers = async (token) => {
 
     try {
       setLoading(true);
@@ -48,7 +69,9 @@ const UserList = () => {
   const handleOpenConfirmModal = (userId, newStatus) => {
     const token = localStorage.getItem("admin_token");
 
-    if (window.confirm(`Are you sure you want to set this user to ${newStatus}?`)) {
+    if (
+      window.confirm(`Are you sure you want to set this user to ${newStatus}?`)
+    ) {
       axios
         .put(
           `/api/admin/users/${userId}`,

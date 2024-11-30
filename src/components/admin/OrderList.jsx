@@ -7,6 +7,8 @@ import {
 } from "@/constants/payment";
 import Pagination from "@/components/UI/Pagination";
 import { currencyFormatter, formatDate } from "@/utils/formatter";
+import { useRouter } from "next/navigation";
+import { checkAdminLogin } from "@/utils/auth";
 
 const OrderList = () => {
   const [orders, setOrders] = useState([]);
@@ -15,14 +17,33 @@ const OrderList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const token = localStorage.getItem("admin_token");
   const ordersPerPage = 10;
 
-  useEffect(() => {
-    fetchOrders();
-  }, []);
+  const router = useRouter();
 
-  const fetchOrders = async () => {
+  useEffect(() => {
+    const initializeData = async () => {
+      const token = localStorage.getItem("admin_token");
+
+      if (!token) {
+        router.replace("/admin/login");
+        return;
+      }
+
+      const response = await checkAdminLogin(token);
+      if (response.data.status !== 200) {
+        localStorage.removeItem("admin_token");
+        router.replace("/admin/login");
+        return;
+      }
+
+      await fetchOrders(token);
+    };
+
+    initializeData();
+  }, [router]);
+
+  const fetchOrders = async (token) => {
     try {
       setLoading(true);
       const response = await axios.get("/api/admin/orders", {

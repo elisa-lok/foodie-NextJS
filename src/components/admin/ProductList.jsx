@@ -2,6 +2,8 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import Pagination from "@/components/UI/Pagination";
 import { currencyFormatter } from "@/utils/formatter";
+import { useRouter } from "next/navigation";
+import { checkAdminLogin } from "@/utils/auth";
 
 const ProductList = () => {
   const [products, setProducts] = useState([]);
@@ -10,12 +12,31 @@ const ProductList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 10;
 
-  useEffect(() => {
-    fetchProducts();
-  }, []);
+  const router = useRouter();
 
-  const fetchProducts = async () => {
-    const token = localStorage.getItem("admin_token");
+  useEffect(() => {
+    const initializeData = async () => {
+      const token = localStorage.getItem("admin_token");
+
+      if (!token) {
+        router.replace("/admin/login");
+        return;
+      }
+
+      const response = await checkAdminLogin(token);
+      if (response.data.status !== 200) {
+        localStorage.removeItem("admin_token");
+        router.replace("/admin/login");
+        return;
+      }
+
+      await fetchProducts(token);
+    };
+
+    initializeData();
+  }, [router]);
+
+  const fetchProducts = async (token) => {
 
     try {
       setLoading(true);
