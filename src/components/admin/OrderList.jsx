@@ -77,7 +77,6 @@ const OrderList = () => {
   };
 
   const handleDetailsClick = (orderId) => {
-    alert(orderId);
     fetchOrderDetails(orderId);
   };
 

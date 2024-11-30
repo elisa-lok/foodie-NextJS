@@ -59,6 +59,23 @@ const ProductList = () => {
       {error && <p className="error-message">{error}</p>}
       {!loading && !error && (
         <>
+          <div style={{ marginBottom: "20px", textAlign: "right" }}>
+            <button
+              onClick={() => handleAddNewProduct()}
+              className="add-button"
+              style={{
+                padding: "10px 20px",
+                backgroundColor: "#4CAF50",
+                color: "white",
+                border: "none",
+                borderRadius: "5px",
+                cursor: "pointer",
+              }}
+            >
+              Add a New Product
+            </button>
+          </div>
+
           <table className="user-table">
             <thead>
               <tr>
