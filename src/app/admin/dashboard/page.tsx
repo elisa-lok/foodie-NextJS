@@ -65,8 +65,17 @@ export default function AdminDashboard() {
         return <p>Manage reviews here.</p>;
       case "Settings":
         return <p>Manage settings here.</p>;
+      case "Logout":
+        return <p>Logout functionality goes here.</p>;
       default:
         return <p>Select an option from the sidebar.</p>;
+    }
+  };
+
+  const handleLogout = () => {
+    if (window.confirm('Are you sure to logout?')) {
+      localStorage.removeItem("admin_token");
+      router.push("/admin/login");
     }
   };
 
@@ -123,6 +132,8 @@ export default function AdminDashboard() {
             >
               Settings
             </li>
+            <li className={selectedSection === "Logout" ? "active" : ""}
+            onClick={handleLogout}>Logout</li>
           </ul>
         </nav>
       </aside>
