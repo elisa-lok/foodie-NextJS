@@ -10,6 +10,8 @@ const ProductList = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
   const productsPerPage = 10;
 
   const router = useRouter();
@@ -37,7 +39,6 @@ const ProductList = () => {
   }, [router]);
 
   const fetchProducts = async (token) => {
-
     try {
       setLoading(true);
       const response = await axios.get("/api/admin/products", {
@@ -70,8 +71,52 @@ const ProductList = () => {
     setCurrentPage(pageNumber);
   };
 
-  const handleUpdate = (productId) => {
-    alert(productId);
+  const handleAddNewProduct = () => {
+    setSelectedProduct(null);
+    setShowModal(true);
+  };
+
+  const handleUpdate = (product) => {
+    setSelectedProduct(product);
+    setShowModal(true);
+  };
+
+  const handleModalClose = () => {
+    setShowModal(false);
+    setSelectedProduct(null);
+  };
+
+  const handleSaveProduct = async (productData) => {
+    const token = localStorage.getItem("admin_token");
+    try {
+      if (selectedProduct) {
+        var response = await axios.put(
+          `/api/admin/products/${selectedProduct._id}`,
+          productData,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        if (response.data.status !== 200) {
+          throw new Error(response.data.error || "Failed to update product.");
+        }
+      } else {
+        var response = await axios.post("/api/admin/products", productData, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (response.data.status !== 200) {
+          throw new Error(response.data.error || "Failed to add new product.");
+        }
+      }
+      handleModalClose();
+      await fetchProducts(token);
+    } catch (err) {
+      console.error("Error saving product:", err);
+    }
   };
 
   return (
@@ -82,7 +127,7 @@ const ProductList = () => {
         <>
           <div style={{ marginBottom: "20px", textAlign: "right" }}>
             <button
-              onClick={() => handleAddNewProduct()}
+              onClick={handleAddNewProduct}
               className="add-button"
               style={{
                 padding: "10px 20px",
@@ -100,7 +145,7 @@ const ProductList = () => {
           <table className="user-table">
             <thead>
               <tr>
-                <th>ID</th>
+                <th>Type ID</th>
                 <th>Product Name</th>
                 <th>Price</th>
                 <th>Image</th>
@@ -124,7 +169,7 @@ const ProductList = () => {
                   <td style={{ textAlign: "left" }}>{product.description}</td>
                   <td>
                     <button
-                      onClick={() => handleUpdate(product._id)}
+                      onClick={() => handleUpdate(product)}
                       className="action-button"
                     >
                       Update
@@ -141,6 +186,115 @@ const ProductList = () => {
           />
         </>
       )}
+
+      {showModal && (
+        <ProductModal
+          product={selectedProduct}
+          onClose={handleModalClose}
+          onSave={handleSaveProduct}
+        />
+      )}
+    </div>
+  );
+};
+
+const ProductModal = ({ product, onClose, onSave }) => {
+  const [formData, setFormData] = useState({
+    id: product?.id || "",
+    name: product?.name || "",
+    price: product?.price || "",
+    description: product?.description || "",
+    image: product?.image || "",
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        setFormData({ ...formData, image: reader.result });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onSave(formData);
+  };
+
+  return (
+    <div className="modal-overlay">
+      <div className="modal-content">
+        <h2 style={{ marginBottom: "20px" }}>
+          {product ? "Edit Product" : "Add New Product"}
+        </h2>
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label>Type ID</label>
+            <input
+              type="text"
+              name="id"
+              value={formData.id}
+              onChange={handleChange}
+              placeholder="Enter type id"
+            />
+          </div>
+          <div className="form-group">
+            <label>Product Name</label>
+            <input
+              type="text"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              placeholder="Enter product name"
+            />
+          </div>
+          <div className="form-group">
+            <label>Price</label>
+            <input
+              type="number"
+              name="price"
+              value={formData.price}
+              onChange={handleChange}
+              placeholder="Enter price"
+            />
+          </div>
+          <div className="form-group">
+            <label>Description</label>
+            <textarea
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              placeholder="Enter description"
+            ></textarea>
+          </div>
+          <div className="form-group">
+            <label>Image:</label>
+            <input type="file" name="image" onChange={handleFileChange} />
+            {formData.image && (
+              <img
+                src={`/${formData.image}`}
+                alt="Image Preview"
+                style={{ width: "80px", borderRadius: "50%" }}
+              />
+            )}
+          </div>
+          <div className="form-actions">
+            <button type="submit" className="save-button">
+              Save
+            </button>
+            <button type="button" className="cancel-button" onClick={onClose}>
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };
