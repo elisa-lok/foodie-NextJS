@@ -4,8 +4,18 @@ import Meals from "@/app/models/Meals";
 import Admin from "@/app/models/Admin";
 import jwt from "jsonwebtoken";
 
-export async function GET(req) {
+export async function PUT(req, { params }) {
   try {
+    const { productId } = params;
+    if (!productId) {
+      return NextResponse.json({
+        status: 400,
+        error: "Product ID is required.",
+      });
+    }
+
+    //const { id, name, price, description, image } = await req.json();
+
     const authHeader = req.headers.get("authorization");
     if (!authHeader) {
       return NextResponse.json({
