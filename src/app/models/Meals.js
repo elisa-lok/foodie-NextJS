@@ -1,9 +1,10 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const MealsSchema = new mongoose.Schema({
-    name: String,
-    price: Number,
-    description: String,
+  name: String,
+  price: Number,
+  description: String,
+  image: String,
 });
 
-export default mongoose.models.Meals || mongoose.model('Meals', MealsSchema);
+export default mongoose.models.Meals || mongoose.model("Meals", MealsSchema);

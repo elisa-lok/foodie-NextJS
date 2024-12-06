@@ -12,6 +12,7 @@ const ProductList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [showModal, setShowModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [token, setToken] = useState(null);
   const productsPerPage = 10;
 
   const router = useRouter();
@@ -32,6 +33,7 @@ const ProductList = () => {
         return;
       }
 
+      setToken(token);
       await fetchProducts(token);
     };
 
@@ -87,7 +89,7 @@ const ProductList = () => {
   };
 
   const handleSaveProduct = async (productData) => {
-    const token = localStorage.getItem("admin_token");
+    if (!token) return;
     try {
       if (selectedProduct) {
         var response = await axios.put(
@@ -119,6 +121,28 @@ const ProductList = () => {
     }
   };
 
+  const handleDelete = async (product) => {
+    if (!token) return;
+    if (window.confirm("Are you sure you want to delete this product?")) {
+      try {
+        const response = await axios.delete(
+          `/api/admin/products/${product._id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        if (response.data.status !== 200) {
+          throw new Error(response.data.error || "Failed to delete product.");
+        }
+        await fetchProducts(token);
+      } catch (err) {
+        console.error("Error deleting product:", err);
+      }
+    }
+  };
+
   return (
     <div className="user-list">
       {loading && <p>Loading...</p>}
@@ -145,7 +169,6 @@ const ProductList = () => {
           <table className="user-table">
             <thead>
               <tr>
-                <th>Type ID</th>
                 <th>Product Name</th>
                 <th>Price</th>
                 <th>Image</th>
@@ -156,7 +179,6 @@ const ProductList = () => {
             <tbody>
               {currentProducts.map((product) => (
                 <tr key={product._id}>
-                  <td>{product.id}</td>
                   <td>{product.name}</td>
                   <td>{currencyFormatter.format(product.price)}</td>
                   <td>
@@ -168,12 +190,26 @@ const ProductList = () => {
                   </td>
                   <td style={{ textAlign: "left" }}>{product.description}</td>
                   <td>
-                    <button
-                      onClick={() => handleUpdate(product)}
-                      className="action-button"
+                    <div
+                      style={{
+                        display: "flex",
+                        gap: "8px",
+                        justifyContent: "center",
+                      }}
                     >
-                      Update
-                    </button>
+                      <button
+                        onClick={() => handleUpdate(product)}
+                        className="action-button"
+                      >
+                        Update
+                      </button>
+                      <button
+                        onClick={() => handleDelete(product)}
+                        className="action-button"
+                      >
+                        Delete
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -236,16 +272,6 @@ const ProductModal = ({ product, onClose, onSave }) => {
         </h2>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label>Type ID</label>
-            <input
-              type="text"
-              name="id"
-              value={formData.id}
-              onChange={handleChange}
-              placeholder="Enter type id"
-            />
-          </div>
-          <div className="form-group">
             <label>Product Name</label>
             <input
               type="text"
@@ -279,7 +305,11 @@ const ProductModal = ({ product, onClose, onSave }) => {
             <input type="file" name="image" onChange={handleFileChange} />
             {formData.image && (
               <img
-                src={`/${formData.image}`}
+                src={
+                  formData.image.startsWith("data:")
+                    ? formData.image
+                    : `/${formData.image}`
+                }
                 alt="Image Preview"
                 style={{ width: "80px", borderRadius: "50%" }}
               />

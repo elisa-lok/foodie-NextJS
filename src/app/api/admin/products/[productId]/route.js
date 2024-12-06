@@ -3,6 +3,9 @@ import dbConnect from "@/utils/db";
 import Meals from "@/app/models/Meals";
 import Admin from "@/app/models/Admin";
 import jwt from "jsonwebtoken";
+import fs from "fs";
+import path from "path";
+import { v4 as uuidv4 } from "uuid";
 
 export async function PUT(req, { params }) {
   try {
@@ -14,7 +17,14 @@ export async function PUT(req, { params }) {
       });
     }
 
-    //const { id, name, price, description, image } = await req.json();
+    const { name, price, description, image } = await req.json();
+
+    if (!name || !price || !description || !image) {
+      return NextResponse.json({
+        status: 400,
+        error: "Please checked the required fields.",
+      });
+    }
 
     const authHeader = req.headers.get("authorization");
     if (!authHeader) {
@@ -35,13 +45,39 @@ export async function PUT(req, { params }) {
       return NextResponse.json({ status: 404, error: "Admin not found" });
     }
 
-    const products = await Meals.find();
-
-    if (!products || products.length === 0) {
-      return NextResponse.json({ status: 404, error: "No product found." });
+    const meal = await Meals.findOne({ _id: productId });
+    if (!meal) {
+      return NextResponse.json({ status: 404, error: "No meal found." });
     }
 
-    return NextResponse.json({ status: 200, products: products });
+    if (image && image.startsWith("data:image/")) {
+      const base64Data = image.replace(/^data:image\/\w+;base64,/, "");
+      const buffer = Buffer.from(base64Data, "base64");
+
+      const imageFilename = `${uuidv4()}.png`;
+      const imagePath = path.join(
+        process.cwd(),
+        "public",
+        "images",
+        imageFilename
+      );
+
+      fs.writeFileSync(imagePath, buffer);
+
+      const imageUrl = `images/${imageFilename}`;
+      meal.image = imageUrl;
+    }
+
+    meal.name = name;
+    meal.price = price;
+    meal.description = description;
+
+    await meal.save();
+
+    return NextResponse.json({
+      status: 200,
+      message: "Product updated successfully",
+    });
   } catch (error) {
     return NextResponse.json({
       status: 500,
