@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import UserList from "@/components/admin/UserList";
 import OrderList from "@/components/admin/OrderList";
 import ProductList from "@/components/admin/ProductList";
+import OverView from "@/components/admin/OverView";
 import "./dashboard.css";
 
 const initialAuthStatus = async () => {
@@ -54,7 +55,7 @@ export default function AdminDashboard() {
   const renderContent = () => {
     switch (selectedSection) {
       case "Overview":
-        return <p>Welcome to the Admin Dashboard Overview.</p>;
+        return <OverView />;
       case "Users":
         return <UserList />;
       case "Products":
