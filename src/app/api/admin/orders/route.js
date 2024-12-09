@@ -25,7 +25,7 @@ export async function GET(req) {
       return NextResponse.json({ status: 404, error: "Admin not found" });
     }
 
-    const orders = await Order.find();
+    const orders = await Order.find().sort({ createdAt: -1 });
 
     if (!orders || orders.length === 0) {
       return NextResponse.json({ status: 404, error: "No order found." });

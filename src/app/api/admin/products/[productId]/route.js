@@ -76,6 +76,7 @@ export async function PUT(req, { params }) {
     meal.name = name;
     meal.price = price;
     meal.description = description;
+    meal.updatedAt = new Date();
 
     await meal.save();
 

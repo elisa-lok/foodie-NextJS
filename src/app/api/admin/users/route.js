@@ -25,7 +25,7 @@ export async function GET( req ) {
       return NextResponse.json({ status: 404, error: "Admin not found" });
     }
 
-    const users = await User.find();
+    const users = await User.find().sort({ createTime: -1 });;
 
     if (!users || users.length === 0) {
       return NextResponse.json(

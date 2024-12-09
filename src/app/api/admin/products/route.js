@@ -28,7 +28,7 @@ export async function GET(req) {
       return NextResponse.json({ status: 404, error: "Admin not found" });
     }
 
-    const products = await Meals.find();
+    const products = await Meals.find().sort({ createdAt: -1 });
 
     if (!products || products.length === 0) {
       return NextResponse.json({ status: 404, error: "No product found." });
@@ -93,6 +93,8 @@ export async function POST(req) {
       price,
       description,
       image: imageUrl,
+      createdAt: new Date(),
+      updatedAt: "",
     });
 
     await newProduct.save();
