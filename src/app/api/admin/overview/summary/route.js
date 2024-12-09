@@ -37,7 +37,7 @@ export async function GET(req) {
     });
     const revenueThisMonth = await Order.aggregate([
       { $match: { createdAt: { $gte: startOfMonth } } },
-      { $group: { _id: null, total: { $sum: "$amount" } } },
+      { $group: { _id: null, total: { $sum: "$totalPrice" } } },
     ]);
     const newUsersThisMonth = await User.countDocuments({
       createdAt: { $gte: startOfMonth },

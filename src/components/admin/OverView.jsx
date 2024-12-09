@@ -37,7 +37,7 @@ const OverView = () => {
           }),
         ]);
 
-        setSummaryData(summaryResponse.data);
+        setSummaryData(summaryResponse.data.data);
         setRecentData(recentResponse.data.data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -90,7 +90,7 @@ const OverView = () => {
           <h4>Recent Users</h4>
           <ul>
             {recentData.recentUsers.map((user) => (
-              <li key={user.id}>{user.name}</li>
+              <li key={user._id}>{user.email}</li>
             ))}
           </ul>
           <button onClick={() => setCurrentView("users")}>More Users</button>
@@ -100,7 +100,7 @@ const OverView = () => {
           <h4>Recent Orders</h4>
           <ul>
             {recentData.recentOrders.map((order) => (
-              <li key={order.id}>{order.description}</li>
+              <li key={order._id}>{order.name}</li>
             ))}
           </ul>
           <button onClick={() => setCurrentView("orders")}>More Orders</button>
@@ -110,7 +110,7 @@ const OverView = () => {
           <h4>Recent Products</h4>
           <ul>
             {recentData.recentProducts.map((product) => (
-              <li key={product.id}>{product.name}</li>
+              <li key={product._id}>{product.name}</li>
             ))}
           </ul>
           <button onClick={() => setCurrentView("products")}>
