@@ -36,7 +36,6 @@ const OverView = () => {
             },
           }),
         ]);
-
         setSummaryData(summaryResponse.data.data);
         setRecentData(recentResponse.data.data);
       } catch (error) {
@@ -45,7 +44,6 @@ const OverView = () => {
         setLoading(false);
       }
     };
-
     fetchData();
   }, []);
 
@@ -62,58 +60,74 @@ const OverView = () => {
   }
 
   return (
-    <div className="overview-page" style={{ padding: "20px" }}>
-      <div
-        className="summary-section"
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          marginBottom: "20px",
-        }}
-      >
-        <div>
-          <h3>Orders This Month</h3>
-          <p>{summaryData.ordersThisMonth}</p>
+    <div className="container mx-auto p-4">
+      <div className="grid grid-cols-3 gap-4">
+        <div className="bg-blue-100 p-4 rounded-lg">
+          <h3 className="text-lg font-semibold mb-2 text-center">
+            Orders This Month
+          </h3>
+          <p className="text-xl font-bold text-center">
+            {summaryData.ordersThisMonth}
+          </p>
         </div>
-        <div>
-          <h3>Revenue This Month</h3>
-          <p>{summaryData.revenueThisMonth}</p>
+        <div className="bg-green-100 p-4 rounded-lg">
+          <h3 className="text-lg font-semibold mb-2 text-center">
+            Revenue This Month
+          </h3>
+          <p className="text-xl font-bold text-center">
+            {summaryData.revenueThisMonth}
+          </p>
         </div>
-        <div>
-          <h3>New Users This Month</h3>
-          <p>{summaryData.newUsersThisMonth}</p>
+        <div className="bg-gray-100 p-4 rounded-lg">
+          <h3 className="text-lg font-semibold mb-2 text-center">
+            New Users This Month
+          </h3>
+          <p className="text-xl font-bold text-center">
+            {summaryData.newUsersThisMonth}
+          </p>
         </div>
       </div>
 
-      <div style={{ display: "flex", gap: "20px" }}>
-        <div style={{ flex: 1 }}>
-          <h4>Recent Users</h4>
-          <ul>
+      <div className="grid grid-cols-3 gap-4 mt-8">
+        <div>
+          <h4 className="text-lg font-semibold mb-2">Recent Users</h4>
+          <ul className="list-disc">
             {recentData.recentUsers.map((user) => (
               <li key={user._id}>{user.email}</li>
             ))}
           </ul>
-          <button onClick={() => setCurrentView("users")}>More Users</button>
+          <button
+            onClick={() => setCurrentView("users")}
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          >
+            More Users
+          </button>
         </div>
-
-        <div style={{ flex: 2 }}>
-          <h4>Recent Orders</h4>
-          <ul>
+        <div>
+          <h4 className="text-lg font-semibold mb-2">Recent Orders</h4>
+          <ul className="list-disc">
             {recentData.recentOrders.map((order) => (
               <li key={order._id}>{order.name}</li>
             ))}
           </ul>
-          <button onClick={() => setCurrentView("orders")}>More Orders</button>
+          <button
+            onClick={() => setCurrentView("orders")}
+            className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+          >
+            More Orders
+          </button>
         </div>
-
-        <div style={{ flex: 1 }}>
-          <h4>Recent Products</h4>
-          <ul>
+        <div>
+          <h4 className="text-lg font-semibold mb-2">Recent Products</h4>
+          <ul className="list-disc">
             {recentData.recentProducts.map((product) => (
               <li key={product._id}>{product.name}</li>
             ))}
           </ul>
-          <button onClick={() => setCurrentView("products")}>
+          <button
+            onClick={() => setCurrentView("products")}
+            className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
+          >
             More Products
           </button>
         </div>
