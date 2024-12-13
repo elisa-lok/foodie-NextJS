@@ -91,7 +91,7 @@ const OverView = () => {
       <div className="grid grid-cols-3 gap-4 mt-8">
         <div>
           <h4 className="text-lg font-semibold mb-2">Recent Users</h4>
-          <ul className="list-disc">
+          <ul className="list-none">
             {recentData.recentUsers.map((user) => (
               <li key={user._id}>{user.email}</li>
             ))}
@@ -105,7 +105,7 @@ const OverView = () => {
         </div>
         <div>
           <h4 className="text-lg font-semibold mb-2">Recent Orders</h4>
-          <ul className="list-disc">
+          <ul className="list-none">
             {recentData.recentOrders.map((order) => (
               <li key={order._id}>{order.name}</li>
             ))}
@@ -119,7 +119,7 @@ const OverView = () => {
         </div>
         <div>
           <h4 className="text-lg font-semibold mb-2">Recent Products</h4>
-          <ul className="list-disc">
+          <ul className="list-none">
             {recentData.recentProducts.map((product) => (
               <li key={product._id}>{product.name}</li>
             ))}
