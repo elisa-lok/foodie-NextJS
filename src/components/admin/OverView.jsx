@@ -93,7 +93,14 @@ const OverView = () => {
           <h4 className="text-lg font-semibold mb-2">Recent Users</h4>
           <ul className="list-none">
             {recentData.recentUsers.map((user) => (
-              <li key={user._id}>{user.email}</li>
+              <li key={user._id} className="flex items-center space-x-4 mb-2">
+                <img
+                  src={user.avatar || "/default_avatar.png"}
+                  alt={user.nick_name}
+                  style={{ width: "50px", height: "50px", borderRadius: "50%" }}
+                />
+                <span>{user.email}</span>
+              </li>
             ))}
           </ul>
           <button
