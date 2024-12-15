@@ -90,7 +90,7 @@ const OverView = () => {
 
       <div className="grid grid-cols-3 gap-4 mt-8">
         <div>
-          <h4 className="text-lg font-semibold mb-2">Recent Users</h4>
+          <h4 className="text-lg font-semibold mb-2">Recent Registered Users</h4>
           <ul className="list-none">
             {recentData.recentUsers.map((user) => (
               <li key={user._id} className="flex items-center space-x-4 mb-2">
