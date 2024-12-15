@@ -90,7 +90,9 @@ const OverView = () => {
 
       <div className="grid grid-cols-3 gap-4 mt-8">
         <div>
-          <h4 className="text-lg font-semibold mb-2">Recent Registered Users</h4>
+          <h4 className="text-lg font-semibold mb-2">
+            Recent Registered Users
+          </h4>
           <ul className="list-none">
             {recentData.recentUsers.map((user) => (
               <li key={user._id} className="flex items-center space-x-4 mb-2">
@@ -125,10 +127,20 @@ const OverView = () => {
           </button>
         </div>
         <div>
-          <h4 className="text-lg font-semibold mb-2">Recent Products</h4>
+          <h4 className="text-lg font-semibold mb-2">Recent Added Products</h4>
           <ul className="list-none">
             {recentData.recentProducts.map((product) => (
-              <li key={product._id}>{product.name}</li>
+              <li
+                key={product._id}
+                className="flex items-center space-x-4 mb-2"
+              >
+                <img
+                  src={`/${product.image}`}
+                  alt={product.name}
+                  style={{ width: "50px", height: "50px", borderRadius: "50%" }}
+                />
+                <span>{product.name}</span>
+              </li>
             ))}
           </ul>
           <button
