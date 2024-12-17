@@ -29,7 +29,13 @@ export async function GET(req) {
 
     const recentUsers = await User.find().sort({ createTime: -1 }).limit(5);
 
-    const recentOrders = await Order.find().sort({ createdAt: -1 }).limit(5);
+    const recentOrders = await Order.find()
+      .sort({ createdAt: -1 })
+      .limit(5)
+      .populate({
+        path: "userId",
+        select: "avatar",
+      });
 
     const recentProducts = await Meals.find().sort({ createdAt: -1 }).limit(5);
 

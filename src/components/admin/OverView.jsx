@@ -116,7 +116,29 @@ const OverView = () => {
           <h4 className="text-lg font-semibold mb-2">Recent Orders</h4>
           <ul className="list-none">
             {recentData.recentOrders.map((order) => (
-              <li key={order._id}>{order.name}</li>
+              <li
+                key={order._id}
+                className="flex items-center justify-between mb-4 p-2 border rounded-lg"
+              >
+                <div className="flex items-start space-x-4">
+                  <img
+                    src={order.avatar || "/default_avatar.png"}
+                    alt={order.name}
+                    style={{
+                      width: "50px",
+                      height: "50px",
+                      borderRadius: "50%",
+                    }}
+                  />
+                  <div>
+                    <p className="font-semibold">{order.name}</p>
+                    <p className="text-gray-500 text-sm">
+                      {new Date(order.createdAt).toISOString().split("T")[0]}
+                    </p>
+                  </div>
+                </div>
+                <p className="text-red-500 font-bold"> - ${order.totalPrice}</p>
+              </li>
             ))}
           </ul>
           <button
@@ -126,7 +148,8 @@ const OverView = () => {
             More Orders
           </button>
         </div>
-        <div>
+
+        <div className="ml-10">
           <h4 className="text-lg font-semibold mb-2">Recent Added Products</h4>
           <ul className="list-none">
             {recentData.recentProducts.map((product) => (
