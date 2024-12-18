@@ -89,7 +89,7 @@ const OverView = () => {
       </div>
 
       <div className="grid grid-cols-3 gap-4 mt-8">
-        <div>
+        <div className="ml-8">
           <h4 className="text-lg font-semibold mb-2">
             Recent Registered Users
           </h4>
