@@ -27,9 +27,11 @@ export async function GET(req) {
       return NextResponse.json({ status: 404, error: "Admin not found" });
     }
 
-    const recentUsers = await User.find().sort({ createTime: -1 }).limit(5);
+    const recentUsers = await User.find({ status: "active" })
+      .sort({ createTime: -1 })
+      .limit(5);
 
-    const recentOrders = await Order.find()
+    const recentOrders = await Order.find({ orderStatus: 1 })
       .sort({ createdAt: -1 })
       .limit(5)
       .populate({
