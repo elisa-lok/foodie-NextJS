@@ -31,7 +31,7 @@ export async function GET(req) {
       .sort({ createTime: -1 })
       .limit(5);
 
-    const recentOrders = await Order.find({ orderStatus: 1 })
+    const recentOrders = await Order.find({ orderStatus: 1, paymentStatus: 1 })
       .sort({ createdAt: -1 })
       .limit(5)
       .populate({
