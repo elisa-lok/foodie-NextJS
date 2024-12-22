@@ -150,7 +150,7 @@ const OverView = () => {
         </div>
 
         <div className="ml-10">
-          <h4 className="text-lg font-semibold mb-2">Recently Added Products</h4>
+          <h4 className="text-lg font-semibold mb-2">Recently Products</h4>
           <ul className="list-none">
             {recentData.recentProducts.map((product) => (
               <li
