@@ -2,11 +2,10 @@
 
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import OrderList from "./OrderList";
-import UserList from "./UserList";
-import ProductList from "./ProductList";
+import { useRouter } from "next/navigation";
 
 const OverView = () => {
+  const router = useRouter();
   const [summaryData, setSummaryData] = useState({
     ordersThisMonth: 0,
     revenueThisMonth: "$0",
@@ -18,7 +17,6 @@ const OverView = () => {
     recentProducts: [],
   });
   const [loading, setLoading] = useState(true);
-  const [currentView, setCurrentView] = useState("overview");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -49,14 +47,6 @@ const OverView = () => {
 
   if (loading) {
     return <p>Loading...</p>;
-  }
-
-  if (currentView === "orders") {
-    return <OrderList onBack={() => setCurrentView("overview")} />;
-  } else if (currentView === "users") {
-    return <UserList onBack={() => setCurrentView("overview")} />;
-  } else if (currentView === "products") {
-    return <ProductList onBack={() => setCurrentView("overview")} />;
   }
 
   return (
@@ -90,9 +80,7 @@ const OverView = () => {
 
       <div className="grid grid-cols-3 gap-4 mt-8">
         <div className="ml-8">
-          <h4 className="text-lg font-semibold mb-2">
-            Recent Registered Users
-          </h4>
+          <h4 className="text-lg font-semibold mb-2">Recent Users</h4>
           <ul className="list-none">
             {recentData.recentUsers.map((user) => (
               <li key={user._id} className="flex items-center space-x-4 mb-2">
@@ -106,7 +94,7 @@ const OverView = () => {
             ))}
           </ul>
           <button
-            onClick={() => setCurrentView("users")}
+            onClick={() => router.push("/admin/users")}
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
           >
             More Users
@@ -142,7 +130,7 @@ const OverView = () => {
             ))}
           </ul>
           <button
-            onClick={() => setCurrentView("orders")}
+            onClick={() => router.push("/admin/orders")}
             className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
           >
             More Orders
@@ -167,7 +155,7 @@ const OverView = () => {
             ))}
           </ul>
           <button
-            onClick={() => setCurrentView("products")}
+            onClick={() => router.push("/admin/products")}
             className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
           >
             More Products

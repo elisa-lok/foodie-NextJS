@@ -7,6 +7,7 @@ import UserList from "@/components/admin/UserList";
 import OrderList from "@/components/admin/OrderList";
 import ProductList from "@/components/admin/ProductList";
 import OverView from "@/components/admin/OverView";
+import SideBar from "@/components/admin/SideBar";
 import "./dashboard.css";
 
 const initialAuthStatus = async () => {
@@ -73,13 +74,6 @@ export default function AdminDashboard() {
     }
   };
 
-  const handleLogout = () => {
-    if (window.confirm('Are you sure to logout?')) {
-      localStorage.removeItem("admin_token");
-      router.push("/admin/login");
-    }
-  };
-
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -90,54 +84,7 @@ export default function AdminDashboard() {
 
   return (
     <main className="dashboard-layout">
-      <aside className="sidebar">
-        <div className="logo">
-          <i className="pizza-icon">🍕</i>
-          <h3>Level One Pizza</h3>
-        </div>
-        <nav>
-          <ul>
-            <li
-              className={selectedSection === "Overview" ? "active" : ""}
-              onClick={() => setSelectedSection("Overview")}
-            >
-              Overview
-            </li>
-            <li
-              className={selectedSection === "Users" ? "active" : ""}
-              onClick={() => setSelectedSection("Users")}
-            >
-              Manage Users
-            </li>
-            <li
-              className={selectedSection === "Products" ? "active" : ""}
-              onClick={() => setSelectedSection("Products")}
-            >
-              Products
-            </li>
-            <li
-              className={selectedSection === "Orders" ? "active" : ""}
-              onClick={() => setSelectedSection("Orders")}
-            >
-              Orders
-            </li>
-            <li
-              className={selectedSection === "Reviews" ? "active" : ""}
-              onClick={() => setSelectedSection("Reviews")}
-            >
-              Reviews
-            </li>
-            <li
-              className={selectedSection === "Settings" ? "active" : ""}
-              onClick={() => setSelectedSection("Settings")}
-            >
-              Settings
-            </li>
-            <li className={selectedSection === "Logout" ? "active" : ""}
-            onClick={handleLogout}>Logout</li>
-          </ul>
-        </nav>
-      </aside>
+      <SideBar />
       <section className="content-area">
         <div className="admin-header">
           <div className="admin-position">admin / {selectedSection}</div>

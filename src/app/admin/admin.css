@@ -276,6 +276,133 @@ textarea {
   background-color: #d32f2f;
 }
 
+.dashboard-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 250px;
+  background-color: #333;
+  color: white;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.sidebar .logo {
+  display: flex;
+  align-items: center;
+  margin-bottom: 30px;
+  font-size: 24px;
+}
+
+.sidebar .logo i {
+  margin-right: 10px;
+}
+
+.sidebar h3 {
+  font-size: 20px;
+}
+
+.sidebar nav ul {
+  list-style-type: none;
+  width: 100%;
+}
+
+.sidebar nav ul li {
+  padding: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.sidebar nav ul li:hover {
+  background-color: #555;
+}
+
+.sidebar nav ul li.active {
+  background-color: #888;
+  font-weight: bold;
+}
+
+.content-area {
+  flex: 1;
+  padding: 20px;
+  background-color: white;
+  overflow-y: auto;
+}
+
+.content-area .admin-position {
+  font-size: 28px;
+  margin-bottom: 20px;
+  color: #333;
+  text-transform: capitalize;
+}
+
+.content-area .admin-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.content-area .admin-header .admin-position-right {
+  display: flex;
+  align-items: center;
+}
+
+.content-area .admin-header .avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #ddd; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 20px;
+}
+
+.content-area .admin-header .avatar img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.content-area .admin-header .notifications {
+  font-size: 20px;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.content-area .admin-header .notifications:hover {
+  color: #888;
+}
+
+.dashboard-layout {
+  display: flex;
+  justify-content: space-between;
+}
+
+.content-area {
+  margin-left: 20px;
+  flex-grow: 1;
+}
+
+@media (max-width: 768px) {
+  .dashboard-layout {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    height: auto;
+  }
+
+  .content-area {
+    margin-left: 0;
+  }
+}
 @keyframes fadeIn {
   from {
     opacity: 0;
