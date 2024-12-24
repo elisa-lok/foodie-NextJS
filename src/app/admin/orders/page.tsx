@@ -9,7 +9,7 @@ export default function OrdersPage() {
     <SideBar />
     <section className="content-area">
       <div className="admin-header">
-        <div className="admin-position">admin / Orders</div>
+        <div className="admin-position">Admin / Orders</div>
         <div className="admin-position-right">
           <div className="avatar">
             <img src="/assets/admin-avatar.png" alt="Admin Avatar" />
