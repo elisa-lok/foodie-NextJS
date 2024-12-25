@@ -36,7 +36,6 @@ const UserList = () => {
   }, [router]);
 
   const fetchUsers = async (token) => {
-
     try {
       setLoading(true);
       const response = await axios.get("/api/admin/users", {
@@ -127,9 +126,13 @@ const UserList = () => {
                     />
                   </td>
                   <td>{user.status}</td>
-                  <td>{new Date(user.createTime).toLocaleString()}</td>
+                  <td>
+                    {new Date(user.createTime).toISOString().split("T")[0]}
+                  </td>
                   {user.lastLogin ? (
-                    <td>{new Date(user.lastLogin).toLocaleString()}</td>
+                    <td>
+                      {new Date(user.lastLogin).toISOString().split("T")[0]}
+                    </td>
                   ) : (
                     <td>Never logged in</td>
                   )}
