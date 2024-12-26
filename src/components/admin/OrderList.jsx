@@ -132,7 +132,9 @@ const OrderList = () => {
                   <td>{ORDER_STATUSES[order.orderStatus]}</td>
                   <td>{PAYMENT_STATUSES[order.paymentStatus]}</td>
                   <td>{PAYMENT_METHODS[order.paymentMethod]}</td>
-                  <td>{new Date(order.createdAt).toLocaleString()}</td>
+                  <td>
+                    {new Date(order.createdAt).toISOString().split("T")[0]}
+                  </td>
                   <td>
                     <button
                       onClick={() => handleDetailsClick(order._id)}
