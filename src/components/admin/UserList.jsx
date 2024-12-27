@@ -9,6 +9,7 @@ const UserList = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState("");
   const usersPerPage = 10;
 
   const router = useRouter();
@@ -57,9 +58,18 @@ const UserList = () => {
     }
   };
 
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+    setCurrentPage(1);
+  };
+
+  const filteredUsers = users.filter((user) =>
+    user.email?.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   const indexOfLastUser = currentPage * usersPerPage;
   const indexOfFirstUser = indexOfLastUser - usersPerPage;
-  const currentUsers = users.slice(indexOfFirstUser, indexOfLastUser);
+  const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -97,6 +107,15 @@ const UserList = () => {
 
   return (
     <div className="user-list">
+      <div className="search-bar">
+        <input
+          type="text"
+          placeholder="Search by user email"
+          value={searchQuery}
+          onChange={handleSearchChange}
+          className="search-input"
+        />
+      </div>
       {loading && <p>Loading...</p>}
       {error && <p className="error-message">{error}</p>}
       {!loading && !error && (
@@ -155,7 +174,7 @@ const UserList = () => {
           </table>
           <Pagination
             currentPage={currentPage}
-            totalPages={Math.ceil(users.length / usersPerPage)}
+            totalPages={Math.ceil(filteredUsers.length / usersPerPage)}
             onPageChange={handlePageChange}
           />
         </>
