@@ -17,6 +17,7 @@ const OrderList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const ordersPerPage = 10;
 
   const router = useRouter();
@@ -89,9 +90,25 @@ const OrderList = () => {
     }
   };
 
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+    setCurrentPage(1);
+  };
+
+  const filteredOrders = orders.filter((order) => {
+    const query = searchQuery.toLowerCase();
+    return (
+      order._id.toLowerCase().includes(query) ||
+      order.name.toLowerCase().includes(query)
+    );
+  });
+
   const indexOfLastOrder = currentPage * ordersPerPage;
   const indexOfFirstOrder = indexOfLastOrder - ordersPerPage;
-  const currentOrders = orders.slice(indexOfFirstOrder, indexOfLastOrder);
+  const currentOrders = filteredOrders.slice(
+    indexOfFirstOrder,
+    indexOfLastOrder
+  );
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -108,6 +125,15 @@ const OrderList = () => {
 
   return (
     <div className="user-list">
+      <div className="search-bar">
+        <input
+          type="text"
+          placeholder="Search order number or buyer name"
+          value={searchQuery}
+          onChange={handleSearchChange}
+          className="search-input"
+        />
+      </div>
       {loading && <p>Loading...</p>}
       {error && <p className="error-message">{error}</p>}
       {!loading && !error && (
@@ -149,7 +175,7 @@ const OrderList = () => {
           </table>
           <Pagination
             currentPage={currentPage}
-            totalPages={Math.ceil(orders.length / ordersPerPage)}
+            totalPages={Math.ceil(filteredOrders.length / ordersPerPage)}
             onPageChange={handlePageChange}
           />
         </>
