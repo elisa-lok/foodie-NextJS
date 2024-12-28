@@ -13,6 +13,7 @@ const ProductList = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [token, setToken] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
   const productsPerPage = 10;
 
   const router = useRouter();
@@ -62,9 +63,18 @@ const ProductList = () => {
     }
   };
 
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+    setCurrentPage(1);
+  };
+
+  const filteredProducts = products.filter((product) =>
+    product.name?.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-  const currentProducts = products.slice(
+  const currentProducts = filteredProducts.slice(
     indexOfFirstProduct,
     indexOfLastProduct
   );
@@ -145,6 +155,15 @@ const ProductList = () => {
 
   return (
     <div className="user-list">
+      <div className="search-bar">
+        <input
+          type="text"
+          placeholder="Search by product name"
+          value={searchQuery}
+          onChange={handleSearchChange}
+          className="search-input"
+        />
+      </div>
       {loading && <p>Loading...</p>}
       {error && <p className="error-message">{error}</p>}
       {!loading && !error && (
@@ -217,7 +236,7 @@ const ProductList = () => {
           </table>
           <Pagination
             currentPage={currentPage}
-            totalPages={Math.ceil(products.length / productsPerPage)}
+            totalPages={Math.ceil(filteredProducts.length / productsPerPage)}
             onPageChange={handlePageChange}
           />
         </>
