@@ -155,34 +155,48 @@ const ProductList = () => {
 
   return (
     <div className="user-list">
-      <div className="search-bar">
-        <input
-          type="text"
-          placeholder="Search by product name"
-          value={searchQuery}
-          onChange={handleSearchChange}
-          className="search-input"
-        />
-      </div>
       {loading && <p>Loading...</p>}
       {error && <p className="error-message">{error}</p>}
       {!loading && !error && (
         <>
-          <div style={{ marginBottom: "20px", textAlign: "right" }}>
-            <button
-              onClick={handleAddNewProduct}
-              className="add-button"
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginBottom: "20px",
+            }}
+          >
+            <div className="search-bar">
+              <input
+                type="text"
+                placeholder="Search by product name"
+                value={searchQuery}
+                onChange={handleSearchChange}
+                className="search-input"
+              />
+            </div>
+            <div
               style={{
-                padding: "10px 20px",
-                backgroundColor: "#4CAF50",
-                color: "white",
-                border: "none",
-                borderRadius: "5px",
-                cursor: "pointer",
+                marginBottom: "10px",
+                textAlign: "right",
               }}
             >
-              Add a New Product
-            </button>
+              <button
+                onClick={handleAddNewProduct}
+                className="add-button"
+                style={{
+                  padding: "10px 20px",
+                  backgroundColor: "#4CAF50",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "5px",
+                  cursor: "pointer",
+                }}
+              >
+                Add a New Product
+              </button>
+            </div>
           </div>
 
           <table className="user-table">
