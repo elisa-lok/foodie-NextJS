@@ -107,19 +107,19 @@ const UserList = () => {
 
   return (
     <div className="user-list">
-      <div className="search-bar">
-        <input
-          type="text"
-          placeholder="Search by user email"
-          value={searchQuery}
-          onChange={handleSearchChange}
-          className="search-input"
-        />
-      </div>
       {loading && <p>Loading...</p>}
       {error && <p className="error-message">{error}</p>}
       {!loading && !error && (
         <>
+          <div className="search-bar">
+            <input
+              type="text"
+              placeholder="Search by user email"
+              value={searchQuery}
+              onChange={handleSearchChange}
+              className="search-input"
+            />
+          </div>
           <table className="user-table">
             <thead>
               <tr>
