@@ -144,7 +144,13 @@ const UserList = () => {
                       style={{ width: "50px", borderRadius: "50%" }}
                     />
                   </td>
-                  <td>{user.status}</td>
+                  <td
+                    style={{
+                      color: user.status === "active" ? "green" : "red",
+                    }}
+                  >
+                    {user.status}
+                  </td>
                   <td>
                     {new Date(user.createTime).toISOString().split("T")[0]}
                   </td>
