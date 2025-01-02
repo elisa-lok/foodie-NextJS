@@ -128,7 +128,7 @@ const OrderList = ({ userId }) => {
                     {PAYMENT_METHODS[order.paymentMethod]}
                   </td>
                   <td style={tableCellStyle}>
-                    {new Date(order.createdAt).toLocaleString()}
+                    {new Date(order.createdAt).toISOString().split("T")[0]}
                   </td>
                   <td style={tableCellStyle}>
                     <a
